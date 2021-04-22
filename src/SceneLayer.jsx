@@ -16,16 +16,18 @@ class SceneLayer extends React.Component
 			transparency = this.props.transparency;
 		}
 
-		console.log(transparency);
-
-		return <input type="range" min="0" max="1000" value={transparency*1000} onChange={this.onTransparencyChange.bind(this)}></input>;
+		return <>
+				Transparent
+				<input type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
+				Opaque
+			</>;
 	};
 
 	onTransparencyChange(event)
 	{
 		if (this.props.onTransparencyChange !== undefined)
 		{
-			this.props.onTransparencyChange(parseFloat(event.target.value) / 1000);
+			this.props.onTransparencyChange(parseFloat(event.target.value));
 		}
 	}
 };
