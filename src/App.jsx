@@ -1,5 +1,6 @@
 import React from "react";
 
+import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer.jsx";
 
 
@@ -22,7 +23,7 @@ class App extends React.Component
 			layer_components.push(<SceneLayer key={i} transparency={this.state.layers[i].transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}></SceneLayer>)
 		}
 
-		return <div>{layer_components}</div>;
+		return <div className={styles.App}>{layer_components}</div>;
 	}
 
 	updateLayerTransparency(index, transparency)
