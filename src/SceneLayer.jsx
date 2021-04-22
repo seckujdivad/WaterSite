@@ -1,5 +1,7 @@
 import React from "react";
 
+import styles from "./SceneLayer.module.css";
+
 
 class SceneLayer extends React.Component
 {
@@ -16,11 +18,19 @@ class SceneLayer extends React.Component
 			transparency = this.props.transparency;
 		}
 
-		return <>
-				Transparent
-				<input type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
-				Opaque
-			</>;
+		let colour = "#6060FF";
+		if (this.props.colour !== undefined)
+		{
+			colour = this.props.colour;
+		}
+
+		return <div className={styles.SceneLayer}>
+				<div className={styles.SceneLayerItem}>Transparent</div>
+				<input className={styles.SceneLayerItem} type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
+				<div className={styles.SceneLayerItem}>Opaque</div>
+				<div className={styles.SceneLayerItem}>Colour</div>
+				<input className={styles.SceneLayerItem} type="color" value={colour} onChange={this.onColourChange.bind(this)}></input>
+			</div>;
 	};
 
 	onTransparencyChange(event)
@@ -28,6 +38,14 @@ class SceneLayer extends React.Component
 		if (this.props.onTransparencyChange !== undefined)
 		{
 			this.props.onTransparencyChange(parseFloat(event.target.value));
+		}
+	}
+
+	onColourChange(event)
+	{
+		if (this.props.onColourChange !== undefined)
+		{
+			this.props.onColourChange(event.target.value);
 		}
 	}
 };

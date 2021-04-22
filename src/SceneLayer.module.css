@@ -1,0 +1,15 @@
+.SceneLayer
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+
+	background-color: #D0D0D0;
+}
+
+.SceneLayerItem
+{
+	padding: 12px 4px;
+}
