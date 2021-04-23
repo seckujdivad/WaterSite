@@ -18,7 +18,7 @@ class SceneLayer extends React.Component
 			transparency = this.props.transparency;
 		}
 
-		let colour = "#6060FF";
+		let colour = "#FFFFFF";
 		if (this.props.colour !== undefined)
 		{
 			colour = this.props.colour;

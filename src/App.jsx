@@ -11,7 +11,12 @@ class App extends React.Component
 		super(props);
 
 		this.state = {
-			layers: [{transparency: 0.5}]
+			layers: [
+				{
+					transparency: 0.5,
+					colour: "#6060FF"
+				}
+			]
 		};
 	}
 
@@ -20,7 +25,11 @@ class App extends React.Component
 		let layer_components = [];
 		for (let i = 0; i < this.state.layers.length; i++)
 		{
-			layer_components.push(<SceneLayer key={i} transparency={this.state.layers[i].transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}></SceneLayer>)
+			const layer = this.state.layers[i];
+			layer_components.push(<SceneLayer key={i}
+				transparency={layer.transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}
+				colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)}
+				></SceneLayer>)
 		}
 
 		return <div className={styles.App}>{layer_components}</div>;
@@ -33,6 +42,15 @@ class App extends React.Component
 			state.layers[index].transparency = transparency;
 			return state;
 		});
+	}
+
+	updateLayerColour(index, colour)
+	{
+		this.setState(function (state)
+		{
+			state.layers[index].colour = colour;
+			return state;
+		})
 	}
 };
 
