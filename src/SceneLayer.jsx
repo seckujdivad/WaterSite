@@ -35,6 +35,8 @@ class SceneLayer extends React.Component
 
 	onTransparencyChange(event)
 	{
+		event.stopPropagation();
+
 		if (this.props.onTransparencyChange !== undefined)
 		{
 			this.props.onTransparencyChange(parseFloat(event.target.value));
@@ -43,6 +45,8 @@ class SceneLayer extends React.Component
 
 	onColourChange(event)
 	{
+		event.stopPropagation();
+
 		if (this.props.onColourChange !== undefined)
 		{
 			this.props.onColourChange(event.target.value);
