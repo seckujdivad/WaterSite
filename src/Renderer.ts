@@ -1,4 +1,4 @@
-import glm from "glm-js";
+import {mat4, vec3} from "gl-matrix";
 
 import App from "./App.jsx";
 
@@ -84,9 +84,9 @@ class Renderer
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 		//set up uniforms
-		let transformation = glm.mat4(2); // = glm.perspective(glm.pi / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
-		transformation = glm.scale(transformation, glm.vec3(1.5));
-		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation.elements);
+		let transformation = mat4.identity(mat4.create()); //glm.mat4(2); // = glm.perspective(glm.pi / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
+		mat4.scale(transformation, transformation, [2, 2, 2]);
+		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation);
 		
 		//perform render
 		gl.clearColor(1, 1, 1, 1);
