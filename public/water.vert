@@ -2,9 +2,9 @@
 
 in vec3 vertPosition;
 
-uniform mat4 projection;
+uniform mat4 transformation;
 
 void main()
 {
-	gl_Position = vec4(vertPosition, 1.0f);
+	gl_Position = transformation * vec4(vertPosition, 1.0f);
 }

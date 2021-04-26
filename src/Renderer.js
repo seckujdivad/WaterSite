@@ -1,3 +1,6 @@
+import glm from "glm-js";
+
+
 class Renderer
 {
 	constructor(app, context, vertex_shader_source, fragment_shader_source)
@@ -46,9 +49,9 @@ class Renderer
 		this.vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
 		let positions = [
-			0, 0, 0,
-			0, 0.5, 0,
-			0.7, 0, 0
+			0, 0, 0.5,
+			0, 0.5, 0.5,
+			0.7, 0, 0.5
 		];
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -57,7 +60,9 @@ class Renderer
 		gl.enableVertexAttribArray(pos_attrib_location);
 		gl.vertexAttribPointer(pos_attrib_location, 3, gl.FLOAT, false, 0, 0);
 
-		this.Render();
+		this.uniforms = {
+			transformation: gl.getUniformLocation(this.shader_program, "transformation")
+		};
 	}
 
 	Render()
@@ -66,8 +71,14 @@ class Renderer
 
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+		//set up uniforms
+		let transformation = glm.mat4(2); // = glm.perspective(glm.pi / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
+		transformation = glm.scale(transformation, glm.vec3(1.5));
+		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation.elements);
+		
+		//perform render
 		gl.clearColor(1, 1, 1, 1);
-		gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 		gl.useProgram(this.shader_program);
 		gl.bindVertexArray(this.vao);

@@ -6,5 +6,5 @@ out vec4 frag_out;
 
 void main()
 {
-	frag_out = gl_FragCoord;
+	frag_out = vec4(vec3(0), 1);
 }

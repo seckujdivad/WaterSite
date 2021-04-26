@@ -27,7 +27,9 @@ const Initialiser = function (app, context, window, shaders)
 	{
 		renderer.Destroy();
 	}
-	window.onclose = OnClose.bind(this, renderer)
+	window.onclose = OnClose.bind(this, renderer);
+
+	window.setInterval(renderer.Render.bind(renderer), 10); //10 ms
 }
 
 QueryShaders().then(Initialiser.bind(this, app, context, window));
