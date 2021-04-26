@@ -1,9 +1,21 @@
 import glm from "glm-js";
 
+import App from "./App.jsx";
+
 
 class Renderer
 {
-	constructor(app, context, vertex_shader_source, fragment_shader_source)
+	app: App;
+	
+	context: WebGL2RenderingContext;
+
+	shader_program: WebGLProgram;
+	vao: WebGLVertexArrayObject;
+	vbo: WebGLBuffer;
+
+	uniforms: {transformation: WebGLUniformLocation};
+
+	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
 		this.app = app;
 		this.context = context;
