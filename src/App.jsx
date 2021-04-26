@@ -52,6 +52,11 @@ class App extends React.Component
 			return state;
 		})
 	}
+
+	getLayers()
+	{
+		return JSON.parse(JSON.stringify(this.state.layers)); //I wish there was a better way to deep copy
+	}
 };
 
 
