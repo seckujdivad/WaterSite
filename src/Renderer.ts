@@ -1,4 +1,4 @@
-import {mat4, vec3} from "gl-matrix";
+import {glMatrix, mat4, vec3} from "gl-matrix";
 
 import App from "./App.jsx";
 
@@ -56,15 +56,17 @@ class Renderer
 			gl.deleteShader(frag_shader);
 		}
 
+		let tri_depth = -4;
+		let positions = [
+			0, 0, tri_depth,
+			0, 0.5, tri_depth,
+			0.7, 0, tri_depth
+		];
+
 		let pos_attrib_location = gl.getAttribLocation(this.shader_program, "vertPosition");
 
 		this.vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-		let positions = [
-			0, 0, 0.5,
-			0, 0.5, 0.5,
-			0.7, 0, 0.5
-		];
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 		this.vao = gl.createVertexArray();
@@ -84,8 +86,8 @@ class Renderer
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 		//set up uniforms
-		let transformation = mat4.identity(mat4.create()); //glm.mat4(2); // = glm.perspective(glm.pi / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
-		mat4.scale(transformation, transformation, [2, 2, 2]);
+		let transformation = mat4.identity(mat4.create());
+		mat4.perspective(transformation, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
 		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation);
 		
 		//perform render
