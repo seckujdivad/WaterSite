@@ -58,12 +58,12 @@ class Renderer
 
 		let tri_depth = -4;
 		let positions = [
-			0, 0, tri_depth,
+			-0.5, -0.5, tri_depth,
 			0, 0.5, tri_depth,
 			0.7, 0, tri_depth
 		];
 
-		let pos_attrib_location = gl.getAttribLocation(this.shader_program, "vertPosition");
+		let pos_attrib_location = gl.getAttribLocation(this.shader_program, "inPosition");
 
 		this.vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
