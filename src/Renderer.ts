@@ -91,6 +91,8 @@ class Renderer
 
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+		gl.useProgram(this.shader_program);
+
 		//set up uniforms
 		let transformation = mat4.identity(mat4.create());
 		mat4.perspective(transformation, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
@@ -99,8 +101,7 @@ class Renderer
 		//perform render
 		gl.clearColor(1, 1, 1, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-		gl.useProgram(this.shader_program);
+		
 		gl.bindVertexArray(this.vao);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
