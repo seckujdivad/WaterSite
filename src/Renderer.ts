@@ -1,7 +1,13 @@
 import {glMatrix, mat4, vec3} from "gl-matrix";
+import WebGLDebugUtils from "webgl-debug";
 
 import App from "./App.jsx";
 
+
+function WebGLErrorCallback(error: number, function_name: string)
+{
+	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
+};
 
 class Renderer
 {
@@ -18,7 +24,7 @@ class Renderer
 	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
 		this.app = app;
-		this.context = context;
+		this.context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
 		const gl = this.context;
 		if (this.context === null)
 		{
