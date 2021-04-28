@@ -19,7 +19,8 @@ class Renderer
 	vao: WebGLVertexArrayObject;
 	vbo: WebGLBuffer;
 
-	uniforms: {transformation: WebGLUniformLocation};
+	uniforms: {transformation: WebGLUniformLocation, waves_texture: WebGLUniformLocation};
+	textures: Array<WebGLTexture>;
 
 	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
@@ -30,6 +31,8 @@ class Renderer
 		{
 			alert("Can't get WebGL context");
 		}
+
+		this.textures = [];
 
 		{
 			let vert_shader = gl.createShader(gl.VERTEX_SHADER);
@@ -64,12 +67,11 @@ class Renderer
 
 		let tri_depth = -4;
 		let positions = [
-			-0.5, -0.5, tri_depth,
-			0, 0.5, tri_depth,
-			0.7, 0, tri_depth
+			-0.5, -0.5, tri_depth, 0, 0,
+			0.5, -0.5, tri_depth, 1, 0,
+			0.5, 0.5, tri_depth, 1, 1,
+			-0.5, 0.5, tri_depth, 0, 1
 		];
-
-		let pos_attrib_location = gl.getAttribLocation(this.shader_program, "inPosition");
 
 		this.vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
@@ -77,12 +79,23 @@ class Renderer
 
 		this.vao = gl.createVertexArray();
 		gl.bindVertexArray(this.vao);
-		gl.enableVertexAttribArray(pos_attrib_location);
-		gl.vertexAttribPointer(pos_attrib_location, 3, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(0);
+		gl.enableVertexAttribArray(1);
+		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 5 * 4, 0);
+		gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 5 * 4, 3 * 4);
 
 		this.uniforms = {
-			transformation: gl.getUniformLocation(this.shader_program, "transformation")
+			transformation: gl.getUniformLocation(this.shader_program, "transformation"),
+			waves_texture: gl.getUniformLocation(this.shader_program, "wavesTexture")
 		};
+
+		let waves_texture = this.LoadTexture("./SeaWavesB_N.jpg");
+		this.textures.push(waves_texture);
+
+		gl.useProgram(this.shader_program);
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D, waves_texture);
+		gl.uniform1i(this.uniforms.waves_texture, 0);
 	}
 
 	Render()
@@ -112,6 +125,34 @@ class Renderer
 		gl.deleteProgram(this.shader_program);
 		gl.deleteVertexArray(this.vao);
 		gl.deleteBuffer(this.vbo);
+
+		this.textures.forEach(gl.deleteTexture);
+	}
+
+	//https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL
+	LoadTexture(url: string): WebGLTexture
+	{
+		const gl = this.context;
+		const texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+
+		//default initialise to 1x1 black texture
+		const pixel = new Uint8Array([0, 0, 0, 255]);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+		const image = new Image();
+		image.onload = function ()
+		{
+			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		};
+		image.src = url;
+
+		return texture;
 	}
 }
 
