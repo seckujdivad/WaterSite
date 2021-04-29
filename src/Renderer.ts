@@ -166,7 +166,7 @@ class Renderer
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		
 		gl.bindVertexArray(this.vao);
-		gl.drawArrays(gl.TRIANGLES, 0, 3);
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
 
 	Destroy()
