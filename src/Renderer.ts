@@ -19,8 +19,13 @@ class Renderer
 	vao: WebGLVertexArrayObject;
 	vbo: WebGLBuffer;
 
-	uniforms: {transformation: WebGLUniformLocation, waves_texture: WebGLUniformLocation};
-	textures: Array<WebGLTexture>;
+	uniforms: {
+		transformation: WebGLUniformLocation,
+		perspective: WebGLUniformLocation,
+		waves_texture: WebGLUniformLocation
+	};
+
+	textures: WebGLTexture[];
 
 	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
@@ -66,12 +71,47 @@ class Renderer
 		}
 
 		let tri_depth = -4;
-		let positions = [
-			-0.5, -0.5, tri_depth, 0, 0,
-			0.5, -0.5, tri_depth, 1, 0,
-			0.5, 0.5, tri_depth, 1, 1,
-			-0.5, 0.5, tri_depth, 0, 1
+		let tri_data = [
+			[
+				{position: [-0.5, -0.5, tri_depth], uv: [0, 0]},
+				{position: [0.5, -0.5, tri_depth], uv: [1, 0]},
+				{position: [-0.5, 0.5, tri_depth], uv: [0, 1]}
+			],
+			[
+				{position: [0.5, -0.5, tri_depth], uv: [1, 0]},
+				{position: [0.5, 0.5, tri_depth], uv: [1, 1]},
+				{position: [-0.5, 0.5, tri_depth], uv: [0, 1]}
+			]
 		];
+		let normal = [0, 0, 1];
+		let tangent = [1, 0, 0];
+
+		let positions: number[] = [];
+		for (const triangle of tri_data)
+		{
+			for (const vertex of triangle)
+			{
+				for (const value of vertex.position)
+				{
+					positions.push(value);
+				}
+
+				for (const value of vertex.uv)
+				{
+					positions.push(value);
+				}
+
+				for (const value of normal)
+				{
+					positions.push(value);
+				}
+
+				for (const value of tangent) //only works when this is a simple plane, will need to calculate for more complex geometry
+				{
+					positions.push(value);
+				}
+			}
+		}
 
 		this.vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
@@ -81,11 +121,18 @@ class Renderer
 		gl.bindVertexArray(this.vao);
 		gl.enableVertexAttribArray(0);
 		gl.enableVertexAttribArray(1);
-		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 5 * 4, 0);
-		gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 5 * 4, 3 * 4);
+		gl.enableVertexAttribArray(2);
+		gl.enableVertexAttribArray(3);
+
+		const SIZEOF_FLOAT = 4;
+		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 0);
+		gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 3 * SIZEOF_FLOAT);
+		gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 5 * SIZEOF_FLOAT);
+		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
 
 		this.uniforms = {
 			transformation: gl.getUniformLocation(this.shader_program, "transformation"),
+			perspective: gl.getUniformLocation(this.shader_program, "perspective"),
 			waves_texture: gl.getUniformLocation(this.shader_program, "wavesTexture")
 		};
 
@@ -107,8 +154,11 @@ class Renderer
 		gl.useProgram(this.shader_program);
 
 		//set up uniforms
+		let perspective = mat4.identity(mat4.create());
+		mat4.perspective(perspective, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
+		gl.uniformMatrix4fv(this.uniforms.perspective, false, perspective);
+
 		let transformation = mat4.identity(mat4.create());
-		mat4.perspective(transformation, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
 		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation);
 		
 		//perform render
