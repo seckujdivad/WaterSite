@@ -3,13 +3,28 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-	justify-content: flex-start;
-	align-items: stretch;
+	justify-content: space-evenly;
+	align-items: center;
 
 	background-color: #D0D0D0;
 }
 
-.SceneLayerItem
+.Item
+{
+	flex: 1;
+	height: 40px;
+	box-sizing: border-box;
+}
+
+.Label
 {
 	padding: 12px 4px;
+	margin: auto;
+	text-align: center;
+}
+
+.MoveButton
+{
+	height: 40px;
+	box-sizing: border-box;
 }

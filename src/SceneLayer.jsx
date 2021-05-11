@@ -25,11 +25,13 @@ class SceneLayer extends React.Component
 		}
 
 		return <div className={styles.SceneLayer}>
-				<div className={styles.SceneLayerItem}>Transparent</div>
-				<input className={styles.SceneLayerItem} type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
-				<div className={styles.SceneLayerItem}>Opaque</div>
-				<div className={styles.SceneLayerItem}>Colour</div>
-				<input className={styles.SceneLayerItem} type="color" value={colour} onChange={this.onColourChange.bind(this)}></input>
+				<div className={styles.Label}>Transparent</div>
+				<input className={styles.Item} type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
+				<div className={styles.Label}>Opaque</div>
+				<div className={styles.Label}>Colour</div>
+				<input className={styles.Item} type="color" value={colour} onChange={this.onColourChange.bind(this)}></input>
+				<button className={styles.MoveButton} onChange={this.onMovePressed.bind(this, true)}>˄</button>
+				<button className={styles.MoveButton} onChange={this.onMovePressed.bind(this, false)}>˅</button>
 			</div>;
 	};
 
@@ -51,6 +53,11 @@ class SceneLayer extends React.Component
 		{
 			this.props.onColourChange(event.target.value);
 		}
+	}
+
+	onMovePressed(up, event)
+	{
+
 	}
 };
 
