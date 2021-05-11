@@ -149,6 +149,11 @@ class Renderer
 	{
 		const gl = this.context;
 
+		//@ts-ignore
+		gl.canvas.width = gl.canvas.clientWidth;
+		//@ts-ignore
+		gl.canvas.height = gl.canvas.clientHeight;
+
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 		gl.useProgram(this.shader_program);
