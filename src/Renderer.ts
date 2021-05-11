@@ -87,17 +87,16 @@ class Renderer
 			gl.deleteShader(frag_shader);
 		}
 
-		let tri_depth = -1;
 		let tri_data = [
 			[
-				{position: [-0.5, -0.5, tri_depth], uv: [0, 0]},
-				{position: [0.5, -0.5, tri_depth], uv: [1, 0]},
-				{position: [-0.5, 0.5, tri_depth], uv: [0, 1]}
+				{position: [-0.5, -0.5, 0], uv: [0, 0]},
+				{position: [0.5, -0.5, 0], uv: [1, 0]},
+				{position: [-0.5, 0.5, 0], uv: [0, 1]}
 			],
 			[
-				{position: [0.5, -0.5, tri_depth], uv: [1, 0]},
-				{position: [0.5, 0.5, tri_depth], uv: [1, 1]},
-				{position: [-0.5, 0.5, tri_depth], uv: [0, 1]}
+				{position: [0.5, -0.5, 0], uv: [1, 0]},
+				{position: [0.5, 0.5, 0], uv: [1, 1]},
+				{position: [-0.5, 0.5, 0], uv: [0, 1]}
 			]
 		];
 		let normal = [0, 0, 1];
@@ -181,6 +180,7 @@ class Renderer
 		gl.uniformMatrix4fv(this.uniforms.perspective, false, perspective);
 
 		let transformation = mat4.identity(mat4.create());
+		mat4.translate(transformation, transformation, vec3.fromValues(0, 0, -1));
 		gl.uniformMatrix4fv(this.uniforms.transformation, false, transformation);
 		
 		//perform render
