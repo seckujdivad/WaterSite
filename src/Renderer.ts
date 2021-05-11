@@ -87,7 +87,7 @@ class Renderer
 			gl.deleteShader(frag_shader);
 		}
 
-		let tri_depth = -4;
+		let tri_depth = -1;
 		let tri_data = [
 			[
 				{position: [-0.5, -0.5, tri_depth], uv: [0, 0]},
