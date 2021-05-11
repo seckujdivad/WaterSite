@@ -9,6 +9,23 @@ function WebGLErrorCallback(error: number, function_name: string)
 	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
 };
 
+function IsCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): canvas is HTMLCanvasElement
+{
+	return canvas instanceof HTMLCanvasElement;
+};
+
+function NarrowCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): HTMLCanvasElement
+{
+	if (IsCanvas(canvas))
+	{
+		return canvas;
+	}
+	else
+	{
+		throw new TypeError("\'canvas\' was not an HTMLCanvasElement");
+	}
+}
+
 class Renderer
 {
 	app: App;
@@ -149,10 +166,10 @@ class Renderer
 	{
 		const gl = this.context;
 
-		//@ts-ignore
-		gl.canvas.width = gl.canvas.clientWidth;
-		//@ts-ignore
-		gl.canvas.height = gl.canvas.clientHeight;
+		const canvas = NarrowCanvas(gl.canvas);
+
+		gl.canvas.width = canvas.clientWidth;
+		gl.canvas.height = canvas.clientHeight;
 
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
