@@ -21,7 +21,7 @@ const vec3 DIFFUSE = vec3(0.1f);
 
 void main()
 {
-	vec3 normal = vertTBN * ((texture(wavesTexture, vertUV).xyz * 2.0f) - 1.0f);
+	vec3 normal = normalize(vertTBN * ((texture(wavesTexture, vertUV).xyz * 2.0f) - 1.0f));
 
 	vec3 colour = vec3(0.5f);
 	colour += DIFFUSE * SUN_COLOUR * max(dot(normal, FRAG_TO_SUN), 0.0f);
