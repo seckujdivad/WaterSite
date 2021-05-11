@@ -15,6 +15,10 @@ class App extends React.Component
 				{
 					transparency: 0.5,
 					colour: "#6060FF"
+				},
+				{
+					transparency: 0.5,
+					colour: "#6060FF"
 				}
 			]
 		};
@@ -26,7 +30,7 @@ class App extends React.Component
 		for (let i = 0; i < this.state.layers.length; i++)
 		{
 			const layer = this.state.layers[i];
-			layer_components.push(<SceneLayer key={i}
+			layer_components.push(<SceneLayer key={i} row={i} numRows={this.state.layers.length} onMovePressed={this.moveRow.bind(this, i)}
 				transparency={layer.transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}
 				colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)}
 				></SceneLayer>)
@@ -56,6 +60,18 @@ class App extends React.Component
 	getLayers()
 	{
 		return JSON.parse(JSON.stringify(this.state.layers)); //I wish there was a better way to deep copy
+	}
+
+	moveRow(row_index, move_up)
+	{
+		this.setState(function (state)
+		{
+			let swap_index = move_up ? row_index - 1 : row_index + 1;
+			let swap = state.layers[swap_index];
+			state.layers[swap_index] = state.layers[row_index];
+			state.layers[row_index] = swap;
+			return state;
+		});
 	}
 };
 
