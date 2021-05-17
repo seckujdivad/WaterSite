@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App.jsx";
-import Renderer from "./Renderer.ts";
+import Renderer from "./Renderer";
 
 async function QueryShaders()
 {

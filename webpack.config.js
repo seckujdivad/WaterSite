@@ -42,5 +42,8 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname, "public")
 	},
-	devtool: "source-map"
+	devtool: "source-map",
+	resolve: {
+		extensions: ['', '.js', '.jsx', '.ts', '.tsx']
+	}
 };
