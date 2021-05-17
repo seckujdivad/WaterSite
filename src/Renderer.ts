@@ -42,7 +42,7 @@ class Renderer
 		waves_texture: WebGLUniformLocation
 	};
 
-	textures: WebGLTexture[];
+	textures: [WebGLTexture, WebGLUniformLocation][];
 
 	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
@@ -153,12 +153,18 @@ class Renderer
 		};
 
 		let waves_texture = this.LoadTexture("./SeaWavesB_N.jpg");
-		this.textures.push(waves_texture);
+		this.textures.push([waves_texture, this.uniforms.waves_texture]);
 
 		gl.useProgram(this.shader_program);
+		for (let i = 0; i < this.textures.length; i++)
+		{
+			const texture = this.textures[i][0];
+			const uniform = this.textures[i][1];
+			gl.activeTexture(gl.TEXTURE0 + i + 1);
+			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.uniform1i(uniform, i + 1);
+		}
 		gl.activeTexture(gl.TEXTURE0);
-		gl.bindTexture(gl.TEXTURE_2D, waves_texture);
-		gl.uniform1i(this.uniforms.waves_texture, 0);
 	}
 
 	Render()
