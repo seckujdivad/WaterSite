@@ -2,29 +2,13 @@ import {glMatrix, mat4, vec3} from "gl-matrix";
 import WebGLDebugUtils from "webgl-debug";
 
 import App from "./App.jsx";
+import NarrowCanvas from "./HTMLCanvasTypes";
 
 
 function WebGLErrorCallback(error: number, function_name: string)
 {
 	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
 };
-
-function IsCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): canvas is HTMLCanvasElement
-{
-	return canvas instanceof HTMLCanvasElement;
-};
-
-function NarrowCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): HTMLCanvasElement
-{
-	if (IsCanvas(canvas))
-	{
-		return canvas;
-	}
-	else
-	{
-		throw new TypeError("\'canvas\' was not an HTMLCanvasElement");
-	}
-}
 
 class Renderer
 {
