@@ -39,7 +39,8 @@ class Renderer
 	uniforms: {
 		transformation: WebGLUniformLocation,
 		perspective: WebGLUniformLocation,
-		waves_texture: WebGLUniformLocation
+		waves_texture: WebGLUniformLocation,
+		sand_texture: WebGLUniformLocation
 	};
 
 	textures: [WebGLTexture, WebGLUniformLocation][];
@@ -149,11 +150,15 @@ class Renderer
 		this.uniforms = {
 			transformation: gl.getUniformLocation(this.shader_program, "transformation"),
 			perspective: gl.getUniformLocation(this.shader_program, "perspective"),
-			waves_texture: gl.getUniformLocation(this.shader_program, "wavesTexture")
+			waves_texture: gl.getUniformLocation(this.shader_program, "wavesTexture"),
+			sand_texture: gl.getUniformLocation(this.shader_program, "sandTexture")
 		};
 
 		let waves_texture = this.LoadTexture("./SeaWavesB_N.jpg");
 		this.textures.push([waves_texture, this.uniforms.waves_texture]);
+
+		let sand_texture = this.LoadTexture("./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
+		this.textures.push([sand_texture, this.uniforms.sand_texture]);
 
 		gl.useProgram(this.shader_program);
 		for (let i = 0; i < this.textures.length; i++)
