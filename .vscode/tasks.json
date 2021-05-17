@@ -12,6 +12,7 @@
 		{
 			"type": "npm",
 			"script": "start",
+			"problemMatcher": [],
 			"label": "npm: start",
 			"detail": "webpack serve --mode development"
 		}
