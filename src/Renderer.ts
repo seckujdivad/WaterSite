@@ -2,7 +2,7 @@ import {glMatrix, mat4, vec3} from "gl-matrix";
 import WebGLDebugUtils from "webgl-debug";
 
 import App from "./App.jsx";
-import NarrowCanvas from "./HTMLCanvasTypes";
+import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
 
 
@@ -13,8 +13,6 @@ function WebGLErrorCallback(error: number, function_name: string)
 
 class Renderer
 {
-	app: App;
-	
 	context: WebGL2RenderingContext;
 
 	vao: WebGLVertexArrayObject;
@@ -22,9 +20,8 @@ class Renderer
 
 	shader_program: ShaderProgram;
 
-	constructor(app: App, context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
+	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
-		this.app = app;
 		this.context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
 		const gl = this.context;
 		if (this.context === null)
@@ -93,25 +90,25 @@ class Renderer
 		gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 5 * SIZEOF_FLOAT);
 		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
 
-		this.shader_program.AddUniform("transformation");
-		this.shader_program.AddUniform("perspective");
+		this.shader_program.addUniform("transformation");
+		this.shader_program.addUniform("perspective");
 
-		this.shader_program.LoadTexture("wavesTexture", "./SeaWavesB_N.jpg");
-		this.shader_program.LoadTexture("sandTexture", "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
+		this.shader_program.loadTexture("wavesTexture", "./SeaWavesB_N.jpg");
+		this.shader_program.loadTexture("sandTexture", "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
 	};
 
-	Render()
+	render()
 	{
 		const gl = this.context;
 
-		const canvas = NarrowCanvas(gl.canvas);
+		const canvas = narrowCanvas(gl.canvas);
 
 		gl.canvas.width = canvas.clientWidth;
 		gl.canvas.height = canvas.clientHeight;
 
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-		this.shader_program.Use();
+		this.shader_program.use();
 
 		//set up uniforms
 		let perspective = mat4.identity(mat4.create());
@@ -130,13 +127,13 @@ class Renderer
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	};
 
-	Destroy()
+	destroy()
 	{
 		const gl = this.context;
 		gl.deleteVertexArray(this.vao);
 		gl.deleteBuffer(this.vbo);
 
-		this.shader_program.Destroy();
+		this.shader_program.destroy();
 	};
 };
 

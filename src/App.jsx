@@ -30,21 +30,21 @@ class App extends React.Component
 			}
 		};
 
-		const createRenderer = function (window, shaders)
+		const createRenderer = function (shaders)
 		{
 			const context = this.state.canvas.getContext("webgl2");
-			const renderer = new Renderer(this, context, shaders.vertex, shaders.fragment);
+			const renderer = new Renderer(context, shaders.vertex, shaders.fragment);
 
-			const OnClose = function(renderer, event)
+			const onClose = function(renderer, event)
 			{
-				renderer.Destroy();
+				renderer.destroy();
 			}
-			window.onclose = OnClose.bind(this, renderer);
+			window.onclose = onClose.bind(this, renderer);
 
-			window.setInterval(renderer.Render.bind(renderer), 10); //10 ms
+			window.setInterval(renderer.render.bind(renderer), 10); //10 ms
 		}
 
-		queryShaders().then(createRenderer.bind(this, window));
+		queryShaders().then(createRenderer.bind(this));
 	}
 
 	render()

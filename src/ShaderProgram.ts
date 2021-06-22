@@ -45,7 +45,7 @@ class ShaderProgram
 		gl.deleteShader(frag_shader);
 	};
 
-	Destroy()
+	destroy()
 	{
 		const gl = this.context;
 		gl.deleteProgram(this.obj);
@@ -55,13 +55,13 @@ class ShaderProgram
 		}
 	};
 
-	AddUniform(name: string)
+	addUniform(name: string)
 	{
 		const gl = this.context;
 		this.uniforms.set(name, gl.getUniformLocation(this.obj, name));
 	}
 
-	LoadTexture(name: string, url: string): WebGLTexture
+	loadTexture(name: string, url: string): WebGLTexture
 	{
 		const gl = this.context;
 		const texture = gl.createTexture();
@@ -84,14 +84,14 @@ class ShaderProgram
 		image.src = url;
 
 		this.textures.set(name, texture);
-		this.AddUniform(name);
+		this.addUniform(name);
 
-		this.SetTextures();
+		this.setTextures();
 
 		return texture;
 	};
 
-	SetTextures()
+	setTextures()
 	{
 		const gl = this.context;
 
@@ -108,7 +108,7 @@ class ShaderProgram
 		gl.activeTexture(gl.TEXTURE0);
 	};
 
-	Use()
+	use()
 	{
 		this.context.useProgram(this.obj);
 	};

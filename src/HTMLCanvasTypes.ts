@@ -1,11 +1,11 @@
-function IsCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): canvas is HTMLCanvasElement
+function isCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): canvas is HTMLCanvasElement
 {
 	return canvas instanceof HTMLCanvasElement;
 };
 
-function NarrowCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): HTMLCanvasElement
+function narrowCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): HTMLCanvasElement
 {
-	if (IsCanvas(canvas))
+	if (isCanvas(canvas))
 	{
 		return canvas;
 	}
@@ -15,4 +15,4 @@ function NarrowCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): HTMLCanvasEl
 	}
 }
 
-export default NarrowCanvas;
+export default narrowCanvas;
