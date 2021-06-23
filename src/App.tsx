@@ -1,13 +1,27 @@
-import React from "react";
+import React, {RefObject} from "react";
 
 import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer.jsx";
 import Renderer from "./Renderer";
 
 
-class App extends React.Component
+interface IProps {
+}
+
+interface IState {
+  layers: Array<{
+	  transparency: number,
+	  colour: string
+  }>;
+  canvas_ref: RefObject<HTMLCanvasElement>;
+  canvas: HTMLCanvasElement;
+}
+
+class App extends React.Component<IProps, IState>
 {
-	constructor(props)
+	state: IState;
+
+	constructor(props: IProps)
 	{
 		super(props);
 
@@ -24,18 +38,18 @@ class App extends React.Component
 			],
 
 			canvas_ref: React.createRef(),
-			get canvas()
+			get canvas(): HTMLCanvasElement
 			{
 				return this.canvas_ref.current;
 			}
 		};
 
-		const createRenderer = function (shaders)
+		const createRenderer = function (shaders: {vertex: string, fragment: string})
 		{
 			const context = this.state.canvas.getContext("webgl2");
 			const renderer = new Renderer(context, shaders.vertex, shaders.fragment);
 
-			const onClose = function(renderer, event)
+			const onClose = function(renderer: Renderer, event)
 			{
 				renderer.destroy();
 			}
@@ -66,9 +80,9 @@ class App extends React.Component
 			</>;
 	}
 
-	updateLayerTransparency(index, transparency)
+	updateLayerTransparency(index: number, transparency: number)
 	{
-		this.setState(function (state)
+		this.setState(function (state: IState): IState
 		{
 			state.layers[index].transparency = transparency;
 			return state;
