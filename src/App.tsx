@@ -1,12 +1,11 @@
 import React, {RefObject} from "react";
 
 import styles from "./App.module.css";
-import SceneLayer from "./SceneLayer.jsx";
+import SceneLayer from "./SceneLayer";
 import Renderer from "./Renderer";
 
 
-interface IProps {
-}
+interface IProps {};
 
 interface IState {
   layers: Array<{
@@ -15,12 +14,10 @@ interface IState {
   }>;
   canvas_ref: RefObject<HTMLCanvasElement>;
   canvas: HTMLCanvasElement;
-}
+};
 
 class App extends React.Component<IProps, IState>
 {
-	state: IState;
-
 	constructor(props: IProps)
 	{
 		super(props);

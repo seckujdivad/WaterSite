@@ -1,9 +1,21 @@
-import React from "react";
+import React, {RefObject} from "react";
 
 import styles from "./SceneLayer.module.css";
 
 
-class SceneLayer extends React.Component
+interface IProps {
+	transparency: number,
+	colour: string,
+	row: number,
+	numRows: number,
+	onTransparencyChange: (newTransparency: number) => any,
+	onColourChange: (newColour: string) => any,
+	onMovePressed: (moveUp: boolean) => any
+};
+
+interface IState {};
+
+class SceneLayer extends React.Component<IProps, IState>
 {
 	constructor(props)
 	{
@@ -55,7 +67,7 @@ class SceneLayer extends React.Component
 			</div>;
 	};
 
-	onTransparencyChange(event)
+	onTransparencyChange(event: React.ChangeEvent<HTMLInputElement>)
 	{
 		event.stopPropagation();
 
@@ -65,7 +77,7 @@ class SceneLayer extends React.Component
 		}
 	}
 
-	onColourChange(event)
+	onColourChange(event: React.ChangeEvent<HTMLInputElement>)
 	{
 		event.stopPropagation();
 
@@ -75,7 +87,7 @@ class SceneLayer extends React.Component
 		}
 	}
 
-	onMovePressed(up, event)
+	onMovePressed(up: boolean, event: React.MouseEvent<HTMLInputElement>)
 	{
 		event.stopPropagation();
 

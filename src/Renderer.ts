@@ -1,7 +1,6 @@
-import {glMatrix, mat4, vec3} from "gl-matrix";
+import {mat4, vec3} from "gl-matrix";
 import WebGLDebugUtils from "webgl-debug";
 
-import App from "./App.jsx";
 import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
 
