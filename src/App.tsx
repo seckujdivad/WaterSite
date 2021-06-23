@@ -2,7 +2,7 @@ import React, {RefObject} from "react";
 
 import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
-import Renderer from "./Renderer";
+import Renderer from "./rendering/Renderer";
 
 
 interface IProps {};
