@@ -1,19 +1,19 @@
 class ShaderProgram
 {
-	context: WebGL2RenderingContext;
+	#context: WebGL2RenderingContext;
 
-	obj: WebGLProgram;
+	#obj: WebGLProgram;
 
-	uniforms: Map<string, WebGLUniformLocation>;
-	textures: Map<string, WebGLTexture>;
+	#uniforms: Map<string, WebGLUniformLocation>;
+	#textures: Map<string, WebGLTexture>;
 
 	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
-		this.context = context;
-		const gl = this.context;
+		this.#context = context;
+		const gl = this.#context;
 
-		this.uniforms = new Map();
-		this.textures = new Map();
+		this.#uniforms = new Map();
+		this.#textures = new Map();
 
 		let vert_shader = gl.createShader(gl.VERTEX_SHADER);
 		gl.shaderSource(vert_shader, vertex_shader_source);
@@ -31,14 +31,14 @@ class ShaderProgram
 			alert(gl.getShaderInfoLog(frag_shader));
 		}
 
-		this.obj = gl.createProgram();
-		gl.attachShader(this.obj, vert_shader);
-		gl.attachShader(this.obj, frag_shader);
-		gl.linkProgram(this.obj);
+		this.#obj = gl.createProgram();
+		gl.attachShader(this.#obj, vert_shader);
+		gl.attachShader(this.#obj, frag_shader);
+		gl.linkProgram(this.#obj);
 
-		if (!gl.getProgramParameter(this.obj, gl.LINK_STATUS))
+		if (!gl.getProgramParameter(this.#obj, gl.LINK_STATUS))
 		{
-			alert(gl.getProgramInfoLog(this.obj));
+			alert(gl.getProgramInfoLog(this.#obj));
 		}
 
 		gl.deleteShader(vert_shader);
@@ -47,9 +47,9 @@ class ShaderProgram
 
 	destroy()
 	{
-		const gl = this.context;
-		gl.deleteProgram(this.obj);
-		for (const [name, texture] of this.textures)
+		const gl = this.#context;
+		gl.deleteProgram(this.#obj);
+		for (const [name, texture] of this.#textures)
 		{
 			gl.deleteTexture(texture);
 		}
@@ -57,13 +57,18 @@ class ShaderProgram
 
 	addUniform(name: string)
 	{
-		const gl = this.context;
-		this.uniforms.set(name, gl.getUniformLocation(this.obj, name));
-	}
+		const gl = this.#context;
+		this.#uniforms.set(name, gl.getUniformLocation(this.#obj, name));
+	};
+
+	getUniform(name: string): WebGLUniformLocation
+	{
+		return this.#uniforms.get(name);
+	};
 
 	loadTexture(name: string, url: string): WebGLTexture
 	{
-		const gl = this.context;
+		const gl = this.#context;
 		const texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -83,7 +88,7 @@ class ShaderProgram
 		};
 		image.src = url;
 
-		this.textures.set(name, texture);
+		this.#textures.set(name, texture);
 		this.addUniform(name);
 
 		this.setTextures();
@@ -93,13 +98,13 @@ class ShaderProgram
 
 	setTextures()
 	{
-		const gl = this.context;
+		const gl = this.#context;
 
-		gl.useProgram(this.obj);
+		gl.useProgram(this.#obj);
 		let i = 0;
-		for (const [name, texture] of this.textures)
+		for (const [name, texture] of this.#textures)
 		{
-			const uniform: WebGLUniformLocation = this.uniforms.get(name);
+			const uniform: WebGLUniformLocation = this.#uniforms.get(name);
 			gl.activeTexture(gl.TEXTURE0 + i + 1);
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.uniform1i(uniform, i + 1);
@@ -110,7 +115,7 @@ class ShaderProgram
 
 	use()
 	{
-		this.context.useProgram(this.obj);
+		this.#context.useProgram(this.#obj);
 	};
 };
 

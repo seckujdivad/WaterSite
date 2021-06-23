@@ -12,23 +12,23 @@ function WebGLErrorCallback(error: number, function_name: string)
 
 class Renderer
 {
-	context: WebGL2RenderingContext;
+	#context: WebGL2RenderingContext;
 
-	vao: WebGLVertexArrayObject;
-	vbo: WebGLBuffer;
+	#vao: WebGLVertexArrayObject;
+	#vbo: WebGLBuffer;
 
-	shader_program: ShaderProgram;
+	#shader_program: ShaderProgram;
 
 	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
-		this.context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
-		const gl = this.context;
-		if (this.context === null)
+		this.#context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
+		const gl = this.#context;
+		if (this.#context === null)
 		{
 			alert("Can't get WebGL context");
 		}
 
-		this.shader_program = new ShaderProgram(context, vertex_shader_source, fragment_shader_source);
+		this.#shader_program = new ShaderProgram(context, vertex_shader_source, fragment_shader_source);
 
 		let tri_data = [
 			[
@@ -72,12 +72,12 @@ class Renderer
 			}
 		}
 
-		this.vbo = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+		this.#vbo = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-		this.vao = gl.createVertexArray();
-		gl.bindVertexArray(this.vao);
+		this.#vao = gl.createVertexArray();
+		gl.bindVertexArray(this.#vao);
 		gl.enableVertexAttribArray(0);
 		gl.enableVertexAttribArray(1);
 		gl.enableVertexAttribArray(2);
@@ -89,16 +89,16 @@ class Renderer
 		gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 5 * SIZEOF_FLOAT);
 		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
 
-		this.shader_program.addUniform("transformation");
-		this.shader_program.addUniform("perspective");
+		this.#shader_program.addUniform("transformation");
+		this.#shader_program.addUniform("perspective");
 
-		this.shader_program.loadTexture("wavesTexture", "./SeaWavesB_N.jpg");
-		this.shader_program.loadTexture("sandTexture", "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
+		this.#shader_program.loadTexture("wavesTexture", "./SeaWavesB_N.jpg");
+		this.#shader_program.loadTexture("sandTexture", "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
 	};
 
 	render()
 	{
-		const gl = this.context;
+		const gl = this.#context;
 
 		const canvas = narrowCanvas(gl.canvas);
 
@@ -107,32 +107,32 @@ class Renderer
 
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-		this.shader_program.use();
+		this.#shader_program.use();
 
 		//set up uniforms
 		let perspective = mat4.identity(mat4.create());
 		mat4.perspective(perspective, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
-		gl.uniformMatrix4fv(this.shader_program.uniforms.get("perspective"), false, perspective);
+		gl.uniformMatrix4fv(this.#shader_program.getUniform("perspective"), false, perspective);
 
 		let transformation = mat4.identity(mat4.create());
 		mat4.translate(transformation, transformation, vec3.fromValues(0, 0, -1));
-		gl.uniformMatrix4fv(this.shader_program.uniforms.get("transformation"), false, transformation);
+		gl.uniformMatrix4fv(this.#shader_program.getUniform("transformation"), false, transformation);
 		
 		//perform render
 		gl.clearColor(1, 1, 1, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		
-		gl.bindVertexArray(this.vao);
+		gl.bindVertexArray(this.#vao);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	};
 
 	destroy()
 	{
-		const gl = this.context;
-		gl.deleteVertexArray(this.vao);
-		gl.deleteBuffer(this.vbo);
+		const gl = this.#context;
+		gl.deleteVertexArray(this.#vao);
+		gl.deleteBuffer(this.#vbo);
 
-		this.shader_program.destroy();
+		this.#shader_program.destroy();
 	};
 };
 
