@@ -3,7 +3,8 @@ import WebGLDebugUtils from "webgl-debug";
 
 import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
-
+import Model from "./model/Model";
+import ModelPresets, {modelFromPreset} from "./model/ModelPresets";
 
 function WebGLErrorCallback(error: number, function_name: string)
 {
@@ -30,47 +31,8 @@ class Renderer
 
 		this.#shader_program = new ShaderProgram(context, vertex_shader_source, fragment_shader_source);
 
-		let tri_data = [
-			[
-				{position: [-0.5, -0.5, 0], uv: [0, 0]},
-				{position: [0.5, -0.5, 0], uv: [1, 0]},
-				{position: [-0.5, 0.5, 0], uv: [0, 1]}
-			],
-			[
-				{position: [0.5, -0.5, 0], uv: [1, 0]},
-				{position: [0.5, 0.5, 0], uv: [1, 1]},
-				{position: [-0.5, 0.5, 0], uv: [0, 1]}
-			]
-		];
-		let normal = [0, 0, 1];
-		let tangent = [1, 0, 0];
-
-		let positions: number[] = [];
-		for (const triangle of tri_data)
-		{
-			for (const vertex of triangle)
-			{
-				for (const value of vertex.position)
-				{
-					positions.push(value);
-				}
-
-				for (const value of vertex.uv)
-				{
-					positions.push(value);
-				}
-
-				for (const value of normal)
-				{
-					positions.push(value);
-				}
-
-				for (const value of tangent) //only works when this is a simple plane, will need to calculate for more complex geometry
-				{
-					positions.push(value);
-				}
-			}
-		}
+		let model = modelFromPreset(ModelPresets.FlatPlane);
+		let positions = model.toArray();
 
 		this.#vbo = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
