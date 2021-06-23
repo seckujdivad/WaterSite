@@ -46,12 +46,6 @@ class App extends React.Component<IProps, IState>
 			const context = this.state.canvas.getContext("webgl2");
 			const renderer = new Renderer(context, shaders.vertex, shaders.fragment);
 
-			const onClose = function(renderer: Renderer, event)
-			{
-				renderer.destroy();
-			}
-			window.onclose = onClose.bind(this, renderer);
-
 			window.setInterval(renderer.render.bind(renderer), 10); //10 ms
 		}
 

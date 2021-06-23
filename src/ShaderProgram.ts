@@ -40,19 +40,6 @@ class ShaderProgram
 		{
 			alert(gl.getProgramInfoLog(this.#obj));
 		}
-
-		gl.deleteShader(vert_shader);
-		gl.deleteShader(frag_shader);
-	};
-
-	destroy()
-	{
-		const gl = this.#context;
-		gl.deleteProgram(this.#obj);
-		for (const [name, texture] of this.#textures)
-		{
-			gl.deleteTexture(texture);
-		}
 	};
 
 	addUniform(name: string)

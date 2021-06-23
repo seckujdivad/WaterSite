@@ -125,15 +125,6 @@ class Renderer
 		gl.bindVertexArray(this.#vao);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	};
-
-	destroy()
-	{
-		const gl = this.#context;
-		gl.deleteVertexArray(this.#vao);
-		gl.deleteBuffer(this.#vbo);
-
-		this.#shader_program.destroy();
-	};
 };
 
 export default Renderer;
