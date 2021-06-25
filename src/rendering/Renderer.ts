@@ -3,7 +3,7 @@ import WebGLDebugUtils from "webgl-debug";
 
 import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
-import Model from "./model/Model";
+import GLModel from "./model/GLModel";
 import ModelPresets, {modelFromPreset} from "./model/ModelPresets";
 
 function WebGLErrorCallback(error: number, function_name: string)
@@ -15,10 +15,9 @@ class Renderer
 {
 	#context: WebGL2RenderingContext;
 
-	#vao: WebGLVertexArrayObject;
-	#vbo: WebGLBuffer;
-
 	#shader_program: ShaderProgram;
+
+	#models: Array<GLModel>;
 
 	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
@@ -31,25 +30,11 @@ class Renderer
 
 		this.#shader_program = new ShaderProgram(context, vertex_shader_source, fragment_shader_source);
 
-		let model = modelFromPreset(ModelPresets.FlatPlane);
-		let positions = model.toArray();
+		this.#models = [];
 
-		this.#vbo = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-		this.#vao = gl.createVertexArray();
-		gl.bindVertexArray(this.#vao);
-		gl.enableVertexAttribArray(0);
-		gl.enableVertexAttribArray(1);
-		gl.enableVertexAttribArray(2);
-		gl.enableVertexAttribArray(3);
-
-		const SIZEOF_FLOAT = 4;
-		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 0);
-		gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 3 * SIZEOF_FLOAT);
-		gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 5 * SIZEOF_FLOAT);
-		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
+		let model = new GLModel(this.#context);
+		modelFromPreset(model, ModelPresets.FlatPlane);
+		this.#models.push(model);
 
 		this.#shader_program.addUniform("transformation");
 		this.#shader_program.addUniform("perspective");
@@ -84,8 +69,11 @@ class Renderer
 		gl.clearColor(1, 1, 1, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		
-		gl.bindVertexArray(this.#vao);
-		gl.drawArrays(gl.TRIANGLES, 0, 6);
+		for (const model of this.#models)
+		{
+			model.bind();
+			gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
+		}
 	};
 };
 

@@ -2,17 +2,43 @@ import {vec3, vec2} from "gl-matrix";
 
 class Model
 {
-	triangles: Array<Triangle>;
+	#triangles: Array<Triangle>;
 
 	constructor(triangles: Array<Triangle> = [])
 	{
-		this.triangles = triangles;
+		this.#triangles = triangles;
 	};
 
 	toArray(): Array<number>
 	{
-		let nums_from_each_triangle = this.triangles.map(triangle => triangle.toArray());
+		let nums_from_each_triangle = this.#triangles.map(triangle => triangle.toArray());
 		return [].concat(...nums_from_each_triangle);
+	}
+
+	get triangles(): Array<Triangle>
+	{
+		return this.#triangles;
+	}
+
+	set triangles(triangles: Array<Triangle>)
+	{
+		this.#triangles = triangles;
+	}
+
+	get num_triangles(): number
+	{
+		let num_triangles = 0;
+		let triangles: Array<Triangle> = this.triangles;
+		for (const _ of triangles)
+		{
+			num_triangles += 1;
+		}
+		return num_triangles;
+	}
+
+	get num_vertices(): number
+	{
+		return this.num_triangles * 3;
 	}
 };
 

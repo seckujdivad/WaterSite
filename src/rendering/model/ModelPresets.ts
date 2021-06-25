@@ -6,11 +6,11 @@ enum ModelPresets
     FlatPlane
 };
 
-function modelFromPreset(preset: ModelPresets): Model
+function modelFromPreset(model: Model, preset: ModelPresets): Model
 {
     if (preset === ModelPresets.FlatPlane)
     {
-        return new Model([
+        model.triangles = [
             new Triangle(vec3.fromValues(0, 0, 1),
             [
                 new Vertex(vec3.fromValues(-0.5, -0.5, 0), vec2.fromValues(0, 0)),
@@ -23,7 +23,8 @@ function modelFromPreset(preset: ModelPresets): Model
                 new Vertex(vec3.fromValues(0.5, 0.5, 0), vec2.fromValues(1, 1)),
                 new Vertex(vec3.fromValues(-0.5, 0.5, 0), vec2.fromValues(0, 1))
             ])
-        ]);
+        ];
+        return model;
     }
     else
     {
