@@ -3,7 +3,7 @@ import {vec3} from "gl-matrix";
 
 import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
-import Renderer from "./rendering/Renderer";
+import Renderer from "./../rendering/Renderer";
 
 
 interface IProps {};
