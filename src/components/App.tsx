@@ -3,7 +3,9 @@ import {vec3} from "gl-matrix";
 
 import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
+import Vector from "./Vector";
 import Renderer from "./../rendering/Renderer";
+import {vec3ToArray, arrayToVec3} from "./../vectorutils";
 
 
 interface IProps {};
@@ -78,6 +80,13 @@ class App extends React.Component<IProps, IState>
 		return <>
 				<div className={styles.App}>{layer_components}</div>
 				<canvas className={styles.glcanvas} ref={this.state.canvas_ref} />
+				<div>
+					<Vector onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
+						{label: "Camera X", min: -10, max: 10, step: 0.01},
+						{label: "Camera Y", min: -10, max: 10, step: 0.01},
+						{label: "Camera Z", min: -10, max: 10, step: 0.01}
+					]} />
+				</div>
 			</>;
 	}
 
@@ -116,11 +125,11 @@ class App extends React.Component<IProps, IState>
 		});
 	}
 
-	moveCamera(axis_index: number, value: number)
+	moveCamera(values: Array<number>)
 	{
 		this.setState(function (state)
 		{
-			state.camera.position[axis_index] = value;
+			state.camera.position = arrayToVec3(values);
 			return state;
 		});
 	}

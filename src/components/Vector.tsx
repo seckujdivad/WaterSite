@@ -46,24 +46,24 @@ class Vector extends React.Component<IProps, IState>
 	render()
 	{
 		let fields = [];
-		for (let i = 0; i < this.#getNumValues(); i++)
+		for (let i = 0; i < this.getNumValues(); i++)
 		{
 			const style = this.props.styles[i];
 			fields.push(<>
 				<div className={styles.FieldLabel}>{style.label}</div>
-				<input className={styles.Field} type="range" min={style.min} max={style.max} step={style.step} value={this.props.values[i]} onChange={this.#valueChanged.bind(this, i)} />
+				<input className={styles.Field} type="range" min={style.min} max={style.max} step={style.step} value={this.props.values[i]} onChange={this.valueChanged.bind(this, i)} />
 			</>);
 		}
 
 		return <div>{fields}</div>;
 	}
 
-	#getNumValues()
+	getNumValues()
 	{
 		return this.props.values.length;
 	}
 
-	#valueChanged(index: number, event: React.ChangeEvent<HTMLInputElement>)
+	valueChanged(index: number, event: React.ChangeEvent<HTMLInputElement>)
 	{
 		event.stopPropagation();
 
