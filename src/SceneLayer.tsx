@@ -58,10 +58,10 @@ class SceneLayer extends React.Component<IProps, IState>
 
 		return <div className={styles.SceneLayer}>
 				<div className={styles.Label}>Transparent</div>
-				<input className={styles.Item} type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)}></input>
+				<input className={styles.Item} type="range" min="0" max="1" step="0.001" value={transparency} onChange={this.onTransparencyChange.bind(this)} />
 				<div className={styles.Label}>Opaque</div>
 				<div className={styles.Label}>Colour</div>
-				<input className={styles.Item} type="color" value={colour} onChange={this.onColourChange.bind(this)}></input>
+				<input className={styles.Item} type="color" value={colour} onChange={this.onColourChange.bind(this)} />
 				<button className={styles.MoveButton} disabled={row_index <= 0} onClick={this.onMovePressed.bind(this, true)}>˄</button>
 				<button className={styles.MoveButton} disabled={row_index >= (num_rows - 1)} onClick={this.onMovePressed.bind(this, false)}>˅</button>
 			</div>;
