@@ -5,6 +5,7 @@ import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
 import GLModel from "./model/GLModel";
 import ModelPresets, {modelFromPreset} from "./model/ModelPresets";
+import {loadPLYModelFromURL} from "./model/PlyLoader"
 
 function WebGLErrorCallback(error: number, function_name: string)
 {
@@ -22,18 +23,21 @@ class Renderer
 	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
 		this.#context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
-		const gl = this.#context;
 		if (this.#context === null)
 		{
 			alert("Can't get WebGL context");
 		}
+
+		const gl = this.#context;
+		gl.disable(gl.CULL_FACE);
 
 		this.#shader_program = new ShaderProgram(context, vertex_shader_source, fragment_shader_source);
 
 		this.#models = [];
 
 		let model = new GLModel(this.#context);
-		modelFromPreset(model, ModelPresets.FlatPlane);
+		loadPLYModelFromURL(model, "cube.ply");
+		//modelFromPreset(model, ModelPresets.FlatPlane);
 		this.#models.push(model);
 
 		this.#shader_program.addUniform("transformation");
@@ -62,7 +66,8 @@ class Renderer
 		gl.uniformMatrix4fv(this.#shader_program.getUniform("perspective"), false, perspective);
 
 		let transformation = mat4.identity(mat4.create());
-		mat4.translate(transformation, transformation, vec3.fromValues(0, 0, -1));
+		mat4.translate(transformation, transformation, vec3.fromValues(0, 0, -3));
+		mat4.scale(transformation, transformation, vec3.fromValues(1, 1, 1));
 		gl.uniformMatrix4fv(this.#shader_program.getUniform("transformation"), false, transformation);
 		
 		//perform render

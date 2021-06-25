@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"jsx": "react",
 		"esModuleInterop": true,
-		"target": "ES6",
+		"target": "es2021",
 		"moduleResolution": "node"
 	},
 }

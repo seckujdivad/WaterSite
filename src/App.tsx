@@ -80,7 +80,7 @@ class App extends React.Component<IProps, IState>
 		});
 	}
 
-	updateLayerColour(index, colour)
+	updateLayerColour(index: number, colour: string)
 	{
 		this.setState(function (state)
 		{
@@ -94,7 +94,7 @@ class App extends React.Component<IProps, IState>
 		return JSON.parse(JSON.stringify(this.state.layers)); //I wish there was a better way to deep copy
 	}
 
-	moveRow(row_index, move_up)
+	moveRow(row_index: number, move_up: boolean)
 	{
 		this.setState(function (state)
 		{

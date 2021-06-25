@@ -34,17 +34,11 @@ class GLModel extends Model
         this.pushVertices();
     };
 
-    get triangles(): Array<Triangle>
+    addTriangle(triangle: Triangle): void
 	{
-		return super.triangles;
-	};
-
-    set triangles(triangles: Array<Triangle>)
-	{
-		super.triangles = triangles;
-
+		super.addTriangle(triangle);
         this.pushVertices();
-	};
+	}
 
     pushVertices(): void
     {

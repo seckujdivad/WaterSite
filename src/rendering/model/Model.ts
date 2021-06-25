@@ -15,21 +15,20 @@ class Model
 		return [].concat(...nums_from_each_triangle);
 	}
 
-	get triangles(): Array<Triangle>
+	getTriangles(): Array<Triangle>
 	{
 		return this.#triangles;
 	}
 
-	set triangles(triangles: Array<Triangle>)
+	addTriangle(triangle: Triangle): void
 	{
-		this.#triangles = triangles;
+		this.#triangles.push(triangle);
 	}
 
 	get num_triangles(): number
 	{
 		let num_triangles = 0;
-		let triangles: Array<Triangle> = this.triangles;
-		for (const _ of triangles)
+		for (const _ of this.getTriangles())
 		{
 			num_triangles += 1;
 		}
