@@ -1,4 +1,5 @@
 import React, {RefObject} from "react";
+import {vec3} from "gl-matrix";
 
 import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
@@ -7,13 +8,18 @@ import Renderer from "./rendering/Renderer";
 
 interface IProps {};
 
-interface IState {
-  layers: Array<{
-	  transparency: number,
-	  colour: string
-  }>;
-  canvas_ref: RefObject<HTMLCanvasElement>;
-  canvas: HTMLCanvasElement;
+interface IState
+{
+	layers: Array<{
+		transparency: number,
+		colour: string
+	}>;
+	canvas_ref: RefObject<HTMLCanvasElement>;
+	canvas: HTMLCanvasElement;
+
+	camera: {
+		position: vec3;
+	}
 };
 
 class App extends React.Component<IProps, IState>
@@ -38,6 +44,10 @@ class App extends React.Component<IProps, IState>
 			get canvas(): HTMLCanvasElement
 			{
 				return this.canvas_ref.current;
+			},
+
+			camera: {
+				position: vec3.fromValues(0, 0, 0)
 			}
 		};
 
@@ -59,10 +69,10 @@ class App extends React.Component<IProps, IState>
 		{
 			const layer = this.state.layers[i];
 			layer_components.push(
-					<SceneLayer key={i} row={i} numRows={this.state.layers.length} onMovePressed={this.moveRow.bind(this, i)}
-					transparency={layer.transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}
-					colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)} />
-				);
+				<SceneLayer key={i} row={i} numRows={this.state.layers.length} onMovePressed={this.moveRow.bind(this, i)}
+				transparency={layer.transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}
+				colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)} />
+			);
 		}
 
 		return <>
@@ -102,6 +112,15 @@ class App extends React.Component<IProps, IState>
 			let swap = state.layers[swap_index];
 			state.layers[swap_index] = state.layers[row_index];
 			state.layers[row_index] = swap;
+			return state;
+		});
+	}
+
+	moveCamera(axis_index: number, value: number)
+	{
+		this.setState(function (state)
+		{
+			state.camera.position[axis_index] = value;
 			return state;
 		});
 	}
