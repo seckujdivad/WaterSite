@@ -11,11 +11,14 @@ out vec2 vertUV;
 
 out mat3 vertTBN;
 
-uniform mat4 transformation;
+uniform mat4 transformationCamera;
+uniform mat4 transformationModel;
 uniform mat4 perspective;
 
 void main()
 {
+	mat4 transformation = transformationModel * transformationCamera;
+
 	vertPositionModel = inPosition;
 	vertUV = inUV;
 

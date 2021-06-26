@@ -1,28 +1,36 @@
-import {vec3, vec2} from "gl-matrix";
+import {vec3, vec2, mat4} from "gl-matrix";
 
 class Model
 {
-	#triangles: Array<Triangle>;
+	_triangles: Array<Triangle>;
 
-	constructor(triangles: Array<Triangle> = [])
+	position: vec3;
+	rotation: vec3;
+	scale: vec3;
+
+	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), triangles: Array<Triangle> = [])
 	{
-		this.#triangles = triangles;
+		this.position = position;
+		this.rotation = rotation;
+		this.scale = scale;
+
+		this._triangles = triangles;
 	};
 
 	toArray(): Array<number>
 	{
-		let nums_from_each_triangle = this.#triangles.map(triangle => triangle.toArray());
+		let nums_from_each_triangle = this._triangles.map(triangle => triangle.toArray());
 		return [].concat(...nums_from_each_triangle);
 	}
 
 	getTriangles(): Array<Triangle>
 	{
-		return this.#triangles;
+		return this._triangles;
 	}
 
 	addTriangle(triangle: Triangle): void
 	{
-		this.#triangles.push(triangle);
+		this._triangles.push(triangle);
 	}
 
 	get num_triangles(): number
@@ -38,6 +46,21 @@ class Model
 	get num_vertices(): number
 	{
 		return this.num_triangles * 3;
+	}
+
+	getTransformation(): mat4
+	{
+		let transformation: mat4 = mat4.create();
+
+		mat4.scale(transformation, transformation, this.scale);
+		
+		mat4.rotateX(transformation, transformation, this.rotation[0]);
+		mat4.rotateY(transformation, transformation, this.rotation[1]);
+		mat4.rotateZ(transformation, transformation, this.rotation[2]);
+
+		mat4.translate(transformation, transformation, this.position);
+
+		return transformation;
 	}
 };
 

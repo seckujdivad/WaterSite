@@ -9,7 +9,7 @@ class GLModel extends Model
 
     constructor(context: WebGL2RenderingContext, triangles: Array<Triangle> = [])
     {
-        super(triangles);
+        super(undefined, undefined, undefined, triangles);
 
         this._context = context;
         const gl = this._context;

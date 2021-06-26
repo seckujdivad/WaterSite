@@ -60,8 +60,7 @@ class Engine
 			mat4.perspective(perspective, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
 			gl.uniformMatrix4fv(this._shader_program.getUniform("perspective"), false, perspective);
 
-			let transformation = camera.getTransformation();
-			gl.uniformMatrix4fv(this._shader_program.getUniform("transformation"), false, transformation);
+			gl.uniformMatrix4fv(this._shader_program.getUniform("transformationCamera"), false, camera.getTransformation());
 			
 			//perform render
 			gl.clearColor(1, 1, 1, 1);
@@ -70,6 +69,7 @@ class Engine
 			for (const model of models)
 			{
 				model.bind();
+				gl.uniformMatrix4fv(this._shader_program.getUniform("transformationModel"), false, model.getTransformation());
 				gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
 			}
 		}
@@ -80,7 +80,8 @@ class Engine
 		let shaders = await queryShaders();
 		this._shader_program = new ShaderProgram(this._context, shaders.vertex, shaders.fragment);
 
-		this._shader_program.addUniform("transformation");
+		this._shader_program.addUniform("transformationCamera");
+		this._shader_program.addUniform("transformationModel");
 		this._shader_program.addUniform("perspective");
 
 		this._shader_program.loadTexture("wavesTexture", "./SeaWavesB_N.jpg");

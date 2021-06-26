@@ -15,6 +15,13 @@
 			"problemMatcher": [],
 			"label": "npm: start",
 			"detail": "webpack serve --mode development"
+		},
+		{
+			"type": "npm",
+			"script": "typecheck",
+			"problemMatcher": [],
+			"label": "npm: typecheck",
+			"detail": "tsc --noEmit"
 		}
 	]
 }
