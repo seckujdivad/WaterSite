@@ -2,10 +2,13 @@ import React, {RefObject} from "react";
 import {vec3} from "gl-matrix";
 
 import styles from "./App.module.css";
+
 import SceneLayer from "./SceneLayer";
 import Vector from "./Vector";
-import Renderer from "./../rendering/Renderer";
+import Renderer from "./Renderer";
 import {vec3ToArray, arrayToVec3} from "./../vectorutils";
+import ModelPresets, {modelFromPreset} from "../rendering/model/ModelPresets";
+import Model from "../rendering/model/Model";
 
 
 interface IProps {};
@@ -22,6 +25,8 @@ interface IState
 	camera: {
 		position: vec3;
 	}
+
+	models: Array<Model>
 };
 
 class App extends React.Component<IProps, IState>
@@ -50,18 +55,10 @@ class App extends React.Component<IProps, IState>
 
 			camera: {
 				position: vec3.fromValues(0, 0, 0)
-			}
+			},
+
+			models: [modelFromPreset(new Model(), ModelPresets.FlatPlane)]
 		};
-
-		const createRenderer = function (shaders: {vertex: string, fragment: string})
-		{
-			const context = this.state.canvas.getContext("webgl2");
-			const renderer = new Renderer(context, shaders.vertex, shaders.fragment);
-
-			window.setInterval(renderer.render.bind(renderer), 10); //10 ms
-		}
-
-		queryShaders().then(createRenderer.bind(this));
 	}
 
 	render()
@@ -79,7 +76,7 @@ class App extends React.Component<IProps, IState>
 
 		return <>
 				<div className={styles.App}>{layer_components}</div>
-				<canvas className={styles.glcanvas} ref={this.state.canvas_ref} />
+				<Renderer models={this.state.models} />
 				<div>
 					<Vector onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
 						{label: "Camera X", min: -10, max: 10, step: 0.01},
@@ -134,12 +131,5 @@ class App extends React.Component<IProps, IState>
 		});
 	}
 };
-
-async function queryShaders()
-{
-	let [vertex_shader_req, fragment_shader_req] = await Promise.all([fetch("water.vert"), fetch("water.frag")]);
-	let [vertex_shader, fragment_shader] = await Promise.all([vertex_shader_req.text(), fragment_shader_req.text()]);
-	return {vertex: vertex_shader, fragment: fragment_shader};
-}
 
 export default App;

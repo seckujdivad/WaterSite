@@ -2,24 +2,23 @@ import Model, {Triangle, Vertex} from "./Model";
 
 class GLModel extends Model
 {
-    #vao: WebGLVertexArrayObject;
-	#vbo: WebGLBuffer;
-    #num_vertices: number;
+    _vao: WebGLVertexArrayObject;
+	_vbo: WebGLBuffer;
 
-	#context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContext;
 
     constructor(context: WebGL2RenderingContext, triangles: Array<Triangle> = [])
     {
         super(triangles);
 
-        this.#context = context;
-        const gl = this.#context;
+        this._context = context;
+        const gl = this._context;
 
-		this.#vbo = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
+		this._vbo = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
 
-		this.#vao = gl.createVertexArray();
-		gl.bindVertexArray(this.#vao);
+		this._vao = gl.createVertexArray();
+		gl.bindVertexArray(this._vao);
 		gl.enableVertexAttribArray(0);
 		gl.enableVertexAttribArray(1);
 		gl.enableVertexAttribArray(2);
@@ -42,20 +41,25 @@ class GLModel extends Model
 
     pushVertices(): void
     {
-        const gl = this.#context;
+        const gl = this._context;
 
         let positions = this.toArray();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
     }
 
     bind(): void
     {
-        const gl = this.#context;
+        const gl = this._context;
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo);
-        gl.bindVertexArray(this.#vao);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
+        gl.bindVertexArray(this._vao);
     }
 };
 
-export default GLModel;
+function GLModelFromModel(context: WebGL2RenderingContext, model: Model)
+{
+    return new GLModel(context, model.getTriangles());
+}
+
+export {GLModel as default, GLModelFromModel};

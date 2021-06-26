@@ -49,10 +49,10 @@ class Vector extends React.Component<IProps, IState>
 		for (let i = 0; i < this.getNumValues(); i++)
 		{
 			const style = this.props.styles[i];
-			fields.push(<>
+			fields.push(<React.Fragment key={i}>
 				<div className={styles.FieldLabel}>{style.label}</div>
 				<input className={styles.Field} type="range" min={style.min} max={style.max} step={style.step} value={this.props.values[i]} onChange={this.valueChanged.bind(this, i)} />
-			</>);
+			</React.Fragment>);
 		}
 
 		return <div>{fields}</div>;
