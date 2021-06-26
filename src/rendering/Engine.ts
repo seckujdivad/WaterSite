@@ -56,7 +56,7 @@ class Engine
 			this._shader_program.use();
 
 			//set up uniforms
-			let perspective = mat4.identity(mat4.create());
+			let perspective = mat4.create();
 			mat4.perspective(perspective, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
 			gl.uniformMatrix4fv(this._shader_program.getUniform("perspective"), false, perspective);
 
@@ -77,8 +77,6 @@ class Engine
 
 	async loadShaderProgram()
 	{
-		const gl = this._context;
-
 		let shaders = await queryShaders();
 		this._shader_program = new ShaderProgram(this._context, shaders.vertex, shaders.fragment);
 

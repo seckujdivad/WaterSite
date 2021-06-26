@@ -19,9 +19,9 @@ class Camera
         vec3.subtract(translate_vec, vec3.create(), this.position);
         mat4.translate(transformation, transformation, translate_vec);
 
-        mat4.rotateX(transformation, transformation, this.rotation[0]);
-        mat4.rotateY(transformation, transformation, this.rotation[1]);
-        mat4.rotateZ(transformation, transformation, this.rotation[2]);
+        mat4.rotateX(transformation, transformation, 0 - this.rotation[0]);
+        mat4.rotateY(transformation, transformation, 0 - this.rotation[1]);
+        mat4.rotateZ(transformation, transformation, 0 - this.rotation[2]);
 
         return transformation;
     }
