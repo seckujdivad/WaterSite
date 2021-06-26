@@ -6,8 +6,8 @@
 	"private": true,
 	"scripts": {
 		"start": "webpack serve --mode development",
-		"build": "webpack --mode production",
-		"typecheck": "tsc --noEmit"
+		"build": "webpack --mode production && node ./production/collect_production.js",
+		"serve-production": "http-server ./production/serve"
 	},
 	"repository": {
 		"type": "git",
@@ -29,6 +29,7 @@
 		"babel-loader": "^8.2.2",
 		"core-js": "^3.15.1",
 		"css-loader": "^5.2.4",
+		"http-server": "^0.12.3",
 		"regenerator-runtime": "^0.13.7",
 		"style-loader": "^2.0.0",
 		"ts-loader": "^9.2.3",
