@@ -1,5 +1,4 @@
-import {mat4, vec3} from "gl-matrix";
-import WebGLDebugUtils from "webgl-debug";
+import {vec3} from "gl-matrix";
 import React, {RefObject} from "react";
 import memoizeOne from "memoize-one";
 
@@ -8,23 +7,18 @@ import styles from "./Renderer.module.css";
 import Model from "../rendering/model/Model";
 import GLModel, {GLModelFromModel} from "../rendering/model/GLModel";
 import Engine from "../rendering/Engine";
+import Camera from "../rendering/Camera";
 
 interface IProps
 {
 	models: Array<Model>;
+	camera: Camera;
 };
 
 interface IState
 {
 	canvas_ref: RefObject<HTMLCanvasElement>;
 	render_timer_id: number;
-};
-
-let getDebugContextCached = memoizeOne(WebGLDebugUtils.makeDebugContext as (context: WebGL2RenderingContext, callback: (error: number, function_name: string) => void) => WebGL2RenderingContext);
-
-function WebGLErrorCallback(error: number, function_name: string)
-{
-	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
 };
 
 let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContext, models: Array<Model>): Array<GLModel>
@@ -60,7 +54,7 @@ class Renderer extends React.Component<IProps, IState>
 	{
 		const engine = getEngine(this.state.canvas_ref.current.getContext("webgl2"));
 		let models = GLModelsFromModelsCached(engine.getContext(), this.props.models);
-		engine.render(models);
+		engine.render(models, this.props.camera);
 	}
 }
 

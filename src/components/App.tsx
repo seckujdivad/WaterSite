@@ -9,6 +9,7 @@ import Renderer from "./Renderer";
 import {vec3ToArray, arrayToVec3} from "./../vectorutils";
 import ModelPresets, {modelFromPreset} from "../rendering/model/ModelPresets";
 import Model from "../rendering/model/Model";
+import Camera from "../rendering/Camera";
 
 
 interface IProps {};
@@ -22,9 +23,7 @@ interface IState
 	canvas_ref: RefObject<HTMLCanvasElement>;
 	canvas: HTMLCanvasElement;
 
-	camera: {
-		position: vec3;
-	}
+	camera: Camera;
 
 	models: Array<Model>
 };
@@ -53,9 +52,7 @@ class App extends React.Component<IProps, IState>
 				return this.canvas_ref.current;
 			},
 
-			camera: {
-				position: vec3.fromValues(0, 0, 0)
-			},
+			camera: new Camera(vec3.fromValues(0, 0, -3), vec3.create()),
 
 			models: [modelFromPreset(new Model(), ModelPresets.FlatPlane)]
 		};
@@ -76,7 +73,7 @@ class App extends React.Component<IProps, IState>
 
 		return <>
 				<div className={styles.App}>{layer_components}</div>
-				<Renderer models={this.state.models} />
+				<Renderer models={this.state.models} camera={this.state.camera} />
 				<div>
 					<Vector onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
 						{label: "Camera X", min: -10, max: 10, step: 0.01},
