@@ -6,10 +6,11 @@ import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
 import Vector from "./Vector";
 import Renderer from "./Renderer";
-import {vec3ToArray, arrayToVec3} from "./../vectorutils";
-import ModelPresets, {modelFromPreset} from "../rendering/model/ModelPresets";
+
+import {vec3ToArray, arrayToVec3} from "../vectorutils";
 import Model from "../rendering/model/Model";
 import Camera from "../rendering/Camera";
+import {getModels, getCamera} from "../scene";
 
 
 interface IProps {};
@@ -52,9 +53,8 @@ class App extends React.Component<IProps, IState>
 				return this.canvas_ref.current;
 			},
 
-			camera: new Camera(vec3.fromValues(0, 0, -3), vec3.create()),
-
-			models: [modelFromPreset(new Model(), ModelPresets.FlatPlane)]
+			camera: getCamera(),
+			models: getModels()
 		};
 	}
 
