@@ -1,5 +1,6 @@
 import {vec3, vec2, mat4} from "gl-matrix";
 
+
 class Model
 {
 	_triangles: Array<Triangle>;

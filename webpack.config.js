@@ -18,24 +18,54 @@ module.exports = {
 				]
 			},
 			{
-				test: /\.jsx?$/,
+				test: /\.js$/,
 				include: path.resolve(__dirname, "src"),
-				use: {
-					loader: "babel-loader",
-					options: {
-						presets: ["@babel/preset-react"]
+				use: [
+					{
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-env"]
+						}
 					}
-				}
+				]
 			},
 			{
-				test: /\.ts(x?)?$/,
+				test: /\.jsx$/,
 				include: path.resolve(__dirname, "src"),
-				use: {
-					loader: "babel-loader",
-					options: {
-						presets: ["@babel/preset-typescript"]
+				use: [
+					{
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-react"]
+						}
 					}
-				}
+				]
+			},
+			{
+				test: /\.ts$/,
+				include: path.resolve(__dirname, "src"),
+				use: [
+					{
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-env"]
+						}
+					},
+					"ts-loader"
+				]
+			},
+			{
+				test: /\.tsx$/,
+				include: path.resolve(__dirname, "src"),
+				use: [
+					{
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-react"]
+						}
+					},
+					"ts-loader"
+				]
 			}
 		]
 	},

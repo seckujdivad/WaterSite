@@ -3,7 +3,6 @@
 		"jsx": "react",
 		"esModuleInterop": true,
 		"target": "es2021",
-		"moduleResolution": "node",
-		"noEmit": true
+		"moduleResolution": "node"
 	}
 }
