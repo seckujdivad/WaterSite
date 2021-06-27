@@ -73,12 +73,26 @@ class App extends React.Component<IProps, IState>
 		return <>
 				<div className={styles.App}>{layer_components}</div>
 				<Renderer models={this.state.models} camera={this.state.camera} />
-				<div>
-					<Vector onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
-						{label: "Camera X", min: -10, max: 10, step: 0.01},
-						{label: "Camera Y", min: -10, max: 10, step: 0.01},
-						{label: "Camera Z", min: -10, max: 10, step: 0.01}
-					]} />
+				<div className={styles.VectorControls}>
+					<div className={styles.VectorControlsHeader}>Camera</div>
+					<div className={styles.VectorControlsBody}>
+						<div className={styles.VectorControl}>
+							<div className={styles.VectorControlHeader}>Position</div>
+							<Vector className={styles.VectorControlVector} onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
+								{label: "X", min: -10, max: 10, step: 0.01},
+								{label: "Y", min: -10, max: 10, step: 0.01},
+								{label: "Z", min: -10, max: 10, step: 0.01}
+							]} />
+						</div>
+						<div className={styles.VectorControl}>
+							<div className={styles.VectorControlHeader}>Rotation</div>
+							<Vector className={styles.VectorControlVector} onChange={this.rotateCamera.bind(this)} values={vec3ToArray(this.state.camera.rotation)} styles={[
+								{label: "X", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01},
+								{label: "Y", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01},
+								{label: "Z", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}
+							]} />
+						</div>
+					</div>
 				</div>
 			</>;
 	}
@@ -123,6 +137,15 @@ class App extends React.Component<IProps, IState>
 		this.setState(function (state)
 		{
 			state.camera.position = arrayToVec3(values);
+			return state;
+		});
+	}
+
+	rotateCamera(values: Array<number>)
+	{
+		this.setState(function (state)
+		{
+			state.camera.rotation = arrayToVec3(values);
 			return state;
 		});
 	}

@@ -3,3 +3,44 @@
 	background-color: white;
 	font-family: sans-serif;
 }
+
+.VectorControls
+{
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+}
+
+.VectorControlsHeader
+{
+	font-size: 20px;
+	text-align: center;
+}
+
+.VectorControlsBody
+{
+	flex-grow: 1;
+
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+}
+
+.VectorControl
+{
+	flex-grow: 1;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.VectorControlHeader
+{
+	font-size: 16px;
+	text-align: center;
+}
+
+.VectorControlVector
+{
+	flex-grow: 1;
+}
