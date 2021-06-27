@@ -1,4 +1,5 @@
-import Model, {Face, Vertex} from "./Model";
+import Model, {Face} from "./Model";
+
 
 class GLModel extends Model
 {
@@ -63,9 +64,4 @@ class GLModel extends Model
     }
 };
 
-function GLModelFromModel(context: WebGL2RenderingContext, model: Model)
-{
-    return new GLModel(context, model);
-}
-
-export {GLModel as default, GLModelFromModel};
+export {GLModel as default};

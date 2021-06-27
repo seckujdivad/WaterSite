@@ -1,13 +1,13 @@
-import {vec3} from "gl-matrix";
 import React, {RefObject} from "react";
 import memoizeOne from "memoize-one";
 
 import styles from "./Renderer.module.css";
 
 import Model from "../rendering/model/Model";
-import GLModel, {GLModelFromModel} from "../rendering/model/GLModel";
+import GLModel from "../rendering/model/GLModel";
 import Engine from "../rendering/Engine";
 import Camera from "../rendering/Camera";
+
 
 interface IProps
 {
@@ -23,7 +23,7 @@ interface IState
 
 let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContext, models: Array<Model>): Array<GLModel>
 {
-	return models.map(GLModelFromModel.bind(this, context));
+	return models.map(model => new GLModel(context, model));
 });
 
 let getEngine = memoizeOne(context => new Engine(context));
