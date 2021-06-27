@@ -1,3 +1,4 @@
 node_modules
 dist
 production/serve
+src/components/*.module.css.d.ts
