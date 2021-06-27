@@ -1,19 +1,19 @@
 class ShaderProgram
 {
-	#context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContext;
 
-	#obj: WebGLProgram;
+	_obj: WebGLProgram;
 
-	#uniforms: Map<string, WebGLUniformLocation>;
-	#textures: Map<string, WebGLTexture>;
+	_uniforms: Map<string, WebGLUniformLocation>;
+	_textures: Map<string, WebGLTexture>;
 
 	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
 	{
-		this.#context = context;
-		const gl = this.#context;
+		this._context = context;
+		const gl = this._context;
 
-		this.#uniforms = new Map();
-		this.#textures = new Map();
+		this._uniforms = new Map();
+		this._textures = new Map();
 
 		let vert_shader = gl.createShader(gl.VERTEX_SHADER);
 		gl.shaderSource(vert_shader, vertex_shader_source);
@@ -31,31 +31,31 @@ class ShaderProgram
 			alert(gl.getShaderInfoLog(frag_shader));
 		}
 
-		this.#obj = gl.createProgram();
-		gl.attachShader(this.#obj, vert_shader);
-		gl.attachShader(this.#obj, frag_shader);
-		gl.linkProgram(this.#obj);
+		this._obj = gl.createProgram();
+		gl.attachShader(this._obj, vert_shader);
+		gl.attachShader(this._obj, frag_shader);
+		gl.linkProgram(this._obj);
 
-		if (!gl.getProgramParameter(this.#obj, gl.LINK_STATUS))
+		if (!gl.getProgramParameter(this._obj, gl.LINK_STATUS))
 		{
-			alert(gl.getProgramInfoLog(this.#obj));
+			alert(gl.getProgramInfoLog(this._obj));
 		}
 	};
 
 	addUniform(name: string)
 	{
-		const gl = this.#context;
-		this.#uniforms.set(name, gl.getUniformLocation(this.#obj, name));
+		const gl = this._context;
+		this._uniforms.set(name, gl.getUniformLocation(this._obj, name));
 	};
 
 	getUniform(name: string): WebGLUniformLocation
 	{
-		return this.#uniforms.get(name);
+		return this._uniforms.get(name);
 	};
 
 	loadTexture(name: string, url: string): WebGLTexture
 	{
-		const gl = this.#context;
+		const gl = this._context;
 		const texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -75,7 +75,7 @@ class ShaderProgram
 		};
 		image.src = url;
 
-		this.#textures.set(name, texture);
+		this._textures.set(name, texture);
 		this.addUniform(name);
 
 		this.setTextures();
@@ -85,13 +85,13 @@ class ShaderProgram
 
 	setTextures()
 	{
-		const gl = this.#context;
+		const gl = this._context;
 
-		gl.useProgram(this.#obj);
+		gl.useProgram(this._obj);
 		let i = 0;
-		for (const [name, texture] of this.#textures)
+		for (const [name, texture] of this._textures)
 		{
-			const uniform: WebGLUniformLocation = this.#uniforms.get(name);
+			const uniform: WebGLUniformLocation = this._uniforms.get(name);
 			gl.activeTexture(gl.TEXTURE0 + i + 1);
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.uniform1i(uniform, i + 1);
@@ -102,7 +102,7 @@ class ShaderProgram
 
 	use()
 	{
-		this.#context.useProgram(this.#obj);
+		this._context.useProgram(this._obj);
 	};
 };
 
