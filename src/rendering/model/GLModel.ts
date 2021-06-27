@@ -7,6 +7,8 @@ class GLModel extends Model
 
 	_context: WebGL2RenderingContext;
 
+    _lastToArray: Array<number>;
+
     constructor(context: WebGL2RenderingContext, faces: Array<Face> = [])
     {
         super(undefined, undefined, undefined, faces);
@@ -44,8 +46,12 @@ class GLModel extends Model
         const gl = this._context;
 
         let positions = this.toArray();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        if (positions !== this._lastToArray)
+        {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+            this._lastToArray = positions;
+        }
     }
 
     bind(): void

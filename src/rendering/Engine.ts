@@ -11,6 +11,17 @@ function WebGLErrorCallback(error: number, function_name: string)
 	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
 };
 
+function forEachWebGLCall(function_name: string, args: Array<any>)
+{
+	for (const arg of args)
+	{
+		if (arg === undefined)
+		{
+			throw Error("undefined passed to " + function_name);
+		}
+	}
+}
+
 async function queryShaders()
 {
 	let [vertex_shader_req, fragment_shader_req] = await Promise.all([fetch("water.vert"), fetch("water.frag")]);
@@ -26,7 +37,7 @@ class Engine
 
 	constructor(context: WebGL2RenderingContext)
 	{
-		this._context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback);
+		this._context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback, forEachWebGLCall);
 		if (this._context === null)
 		{
 			alert("Can't get WebGL context");
@@ -69,6 +80,7 @@ class Engine
 			for (const model of models)
 			{
 				model.bind();
+				model.pushVertices();
 				gl.uniformMatrix4fv(this._shader_program.getUniform("transformationModel"), false, model.getTransformation());
 				gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
 			}

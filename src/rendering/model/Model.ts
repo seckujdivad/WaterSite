@@ -63,6 +63,32 @@ class Model
 
 		return transformation;
 	}
+
+	compare(rhs: Model)
+	{
+		if (vec3.equals(this.position, rhs.position) && vec3.equals(this.rotation, rhs.rotation) && vec3.equals(this.scale, rhs.scale))
+		{
+			if (this._faces.length == rhs._faces.length)
+			{
+				for (let i = 0; i < this._faces.length; i++)
+				{
+					if (!this._faces[i].compare(rhs._faces[i]))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
 
 class Face
@@ -128,6 +154,32 @@ class Face
 	{
 		return this.vertices.length - 2;
 	}
+
+	compare(rhs: Face)
+	{
+		if (vec3.equals(this.normal, rhs.normal))
+		{
+			if (this.vertices.length == rhs.vertices.length)
+			{
+				for (let i = 0; i < this.vertices.length; i++)
+				{
+					if (!this.vertices[i].compare(rhs.vertices[i]))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
 
 class Vertex
@@ -148,6 +200,11 @@ class Vertex
 		result.push(this.uv[0], this.uv[1]);
 
 		return result;
+	}
+
+	compare(rhs: Vertex): boolean
+	{
+		return vec3.equals(this.position, rhs.position) && vec2.equals(this.uv, rhs.uv);
 	}
 };
 
