@@ -11,7 +11,7 @@ class GLModel extends Model
 
     constructor(context: WebGL2RenderingContext, model: Model)
     {
-        super(undefined, undefined, undefined, model._faces, model.textures);
+        super(model.position, model.rotation, model.scale, model._faces, model.textures);
 
         this._context = context;
         const gl = this._context;
