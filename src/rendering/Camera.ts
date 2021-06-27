@@ -1,5 +1,6 @@
 import {mat4, vec3} from "gl-matrix";
 
+
 class Camera
 {
     position: vec3;

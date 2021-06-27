@@ -34,7 +34,7 @@ class GLModel extends Model
 		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
 
         this.pushVertices();
-    };
+    }
 
     addFace(face: Face): void
 	{

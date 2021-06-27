@@ -1,5 +1,6 @@
 import {vec3, vec4} from "gl-matrix";
 
+
 enum TextureType
 {
     URL,

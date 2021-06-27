@@ -196,7 +196,7 @@ class Vertex
 	{
 		this.position = position;
 		this.uv = uv;
-	};
+	}
 
 	toArray(): Array<number>
 	{

@@ -2,6 +2,7 @@ import {vec3, vec4} from "gl-matrix";
 
 import Texture, {TextureType} from "./Texture";
 
+
 class TextureManager
 {
 	_context: WebGL2RenderingContext;

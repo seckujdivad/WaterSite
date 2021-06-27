@@ -1,5 +1,6 @@
 import {vec4, vec3, vec2} from "gl-matrix";
 
+
 function vec4ToArray(vector: vec4): Array<number>
 {
 	return [

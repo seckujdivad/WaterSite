@@ -1,5 +1,4 @@
 import React, {RefObject} from "react";
-import {vec3} from "gl-matrix";
 
 import styles from "./App.module.css";
 

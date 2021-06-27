@@ -1,6 +1,7 @@
 import Model, {Vertex, Face} from "./Model";
 import {vec3, vec2} from "gl-matrix";
 
+
 enum ModelPresets
 {
     FlatPlane

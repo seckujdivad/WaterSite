@@ -2,6 +2,7 @@ import {vec3} from "gl-matrix";
 
 import Texture, {TextureType} from "./Texture";
 
+
 class ModelTextures
 {
     colour: Texture;

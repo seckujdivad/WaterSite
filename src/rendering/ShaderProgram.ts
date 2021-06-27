@@ -61,7 +61,7 @@ class ShaderProgram
 		this.linkTexturesAndUniforms();
 
 		return texture;
-	};
+	}
 
 	linkTexturesAndUniforms()
 	{

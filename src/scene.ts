@@ -5,6 +5,7 @@ import {loadPLYModelFromURL} from "./rendering/model/PlyLoader";
 import Camera from "./rendering/Camera";
 import Texture, {TextureType} from "./rendering/texture/Texture";
 
+
 function getCamera()
 {
     return new Camera(vec3.fromValues(0, 0, 3), vec3.create());

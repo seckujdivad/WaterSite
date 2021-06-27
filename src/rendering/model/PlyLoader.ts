@@ -31,7 +31,7 @@ class Element
 		this.num_occurrences = num_occurrences;
 		this.properties = properties;
 	}
-}
+};
 
 function loadPLYModel(model: Model, ply_contents: string): Model //this function is only written to work with Blender's PLY ouptut
 {
@@ -172,7 +172,7 @@ function loadPLYModel(model: Model, ply_contents: string): Model //this function
 	}
 
 	return model;
-};
+}
 
 async function loadPLYModelFromURL(model: Model, url: string)
 {

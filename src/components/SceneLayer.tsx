@@ -1,4 +1,4 @@
-import React, {RefObject} from "react";
+import React from "react";
 
 import styles from "./SceneLayer.module.css";
 
@@ -17,10 +17,10 @@ interface IState {};
 
 class SceneLayer extends React.Component<IProps, IState>
 {
-	constructor(props)
+	constructor(props: IProps)
 	{
 		super(props);
-	};
+	}
 
 	render()
 	{
@@ -65,7 +65,7 @@ class SceneLayer extends React.Component<IProps, IState>
 				<button className={styles.MoveButton} disabled={row_index <= 0} onClick={this.onMovePressed.bind(this, true)}>˄</button>
 				<button className={styles.MoveButton} disabled={row_index >= (num_rows - 1)} onClick={this.onMovePressed.bind(this, false)}>˅</button>
 			</div>;
-	};
+	}
 
 	onTransparencyChange(event: React.ChangeEvent<HTMLInputElement>)
 	{

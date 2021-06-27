@@ -7,10 +7,11 @@ import GLModel from "./model/GLModel";
 import Camera from "./Camera";
 import TextureManager from "./texture/TextureManager";
 
+
 function WebGLErrorCallback(error: number, function_name: string)
 {
 	throw WebGLDebugUtils.glEnumToString(error) + " was caused by a call to: " + function_name;
-};
+}
 
 function forEachWebGLCall(function_name: string, args: Array<any>)
 {
@@ -54,7 +55,7 @@ class Engine
 		this._shader_program = null;
 
 		this.loadShaderProgram();
-	};
+	}
 
 	render(models: Array<GLModel>, camera: Camera)
 	{
@@ -94,7 +95,7 @@ class Engine
 				gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
 			}
 		}
-	};
+	}
 
 	async loadShaderProgram()
 	{
