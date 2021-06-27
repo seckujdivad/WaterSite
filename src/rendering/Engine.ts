@@ -1,10 +1,11 @@
-import {mat4, vec3} from "gl-matrix";
+import {mat4} from "gl-matrix";
 import WebGLDebugUtils from "webgl-debug";
 
 import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
 import GLModel from "./model/GLModel";
 import Camera from "./Camera";
+import TextureManager from "./texture/TextureManager";
 
 function WebGLErrorCallback(error: number, function_name: string)
 {
@@ -34,6 +35,7 @@ class Engine
 	_context: WebGL2RenderingContext;
 
 	_shader_program: ShaderProgram;
+	_texture_manager: TextureManager;
 
 	constructor(context: WebGL2RenderingContext)
 	{
@@ -42,6 +44,8 @@ class Engine
 		{
 			alert("Can't get WebGL context");
 		}
+
+		this._texture_manager = new TextureManager(this._context);
 
 		const gl = this._context;
 		gl.enable(gl.CULL_FACE);
@@ -80,8 +84,12 @@ class Engine
 			
 			for (const model of models)
 			{
+				this._shader_program.addTexture("textureColour", this._texture_manager.getTexture(model.textures.colour));
+				this._shader_program.addTexture("textureNormal", this._texture_manager.getTexture(model.textures.normal));
+
 				model.bind();
 				model.pushVertices();
+
 				gl.uniformMatrix4fv(this._shader_program.getUniform("transformationModel"), false, model.getTransformation());
 				gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
 			}
@@ -96,9 +104,6 @@ class Engine
 		this._shader_program.addUniform("transformationCamera");
 		this._shader_program.addUniform("transformationModel");
 		this._shader_program.addUniform("perspective");
-
-		this._shader_program.loadTexture("wavesTexture", "./SeaWavesB_N.jpg");
-		this._shader_program.loadTexture("sandTexture", "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
 	}
 
 	getContext()

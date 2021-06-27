@@ -1,4 +1,5 @@
 import {vec3, vec2, mat4} from "gl-matrix";
+import ModelTextures from "../texture/ModelTextures";
 
 
 class Model
@@ -9,14 +10,18 @@ class Model
 	rotation: vec3;
 	scale: vec3;
 
-	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [])
+	textures: ModelTextures;
+
+	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [], textures: ModelTextures = new ModelTextures())
 	{
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
 
+		this.textures = textures;
+
 		this._faces = faces;
-	};
+	}
 
 	toArray(): Array<number>
 	{

@@ -9,9 +9,9 @@ class GLModel extends Model
 
     _lastToArray: Array<number>;
 
-    constructor(context: WebGL2RenderingContext, faces: Array<Face> = [])
+    constructor(context: WebGL2RenderingContext, model: Model)
     {
-        super(undefined, undefined, undefined, faces);
+        super(undefined, undefined, undefined, model._faces, model.textures);
 
         this._context = context;
         const gl = this._context;
@@ -65,7 +65,7 @@ class GLModel extends Model
 
 function GLModelFromModel(context: WebGL2RenderingContext, model: Model)
 {
-    return new GLModel(context, model.getFaces());
+    return new GLModel(context, model);
 }
 
 export {GLModel as default, GLModelFromModel};

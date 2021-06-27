@@ -40,50 +40,30 @@ class ShaderProgram
 		{
 			alert(gl.getProgramInfoLog(this._obj));
 		}
-	};
+	}
 
 	addUniform(name: string)
 	{
 		const gl = this._context;
 		this._uniforms.set(name, gl.getUniformLocation(this._obj, name));
-	};
+	}
 
 	getUniform(name: string): WebGLUniformLocation
 	{
 		return this._uniforms.get(name);
-	};
+	}
 
-	loadTexture(name: string, url: string): WebGLTexture
+	addTexture(name: string, texture: WebGLTexture)
 	{
-		const gl = this._context;
-		const texture = gl.createTexture();
-		gl.bindTexture(gl.TEXTURE_2D, texture);
-
-		//default initialise to 1x1 black texture
-		const pixel = new Uint8Array([0, 0, 0, 255]);
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-
-		const image = new Image();
-		image.onload = function ()
-		{
-			gl.bindTexture(gl.TEXTURE_2D, texture);
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-		};
-		image.src = url;
-
 		this._textures.set(name, texture);
 		this.addUniform(name);
 
-		this.setTextures();
+		this.linkTexturesAndUniforms();
 
 		return texture;
 	};
 
-	setTextures()
+	linkTexturesAndUniforms()
 	{
 		const gl = this._context;
 
@@ -98,12 +78,12 @@ class ShaderProgram
 			i += 1;
 		};
 		gl.activeTexture(gl.TEXTURE0);
-	};
+	}
 
 	use()
 	{
 		this._context.useProgram(this._obj);
-	};
-};
+	}
+}
 
 export default ShaderProgram;
