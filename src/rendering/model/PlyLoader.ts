@@ -1,5 +1,5 @@
 import {vec3, vec2} from "gl-matrix";
-import Model, {Triangle, Vertex} from "./Model";
+import Model, {Face, Vertex} from "./Model";
 
 enum PlyType
 {
@@ -168,10 +168,7 @@ function loadPLYModel(model: Model, ply_contents: string): Model //this function
 		let normal = vec3.fromValues(0, 0, 0);
 		vec3.normalize(normal, sum_vec);
 
-		for (let i = 1; i < vertex_indices.length; i++)
-		{
-			model.addTriangle(new Triangle(normal, [vertices[0], vertices[i], vertices[i + 1]]));
-		}
+		model.addFace(new Face(normal, vertex_indices.map(index => vertices[index])));
 	}
 
 	return model;

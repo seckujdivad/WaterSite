@@ -42,7 +42,7 @@ class Renderer extends React.Component<IProps, IState>
 
 	render()
 	{
-		return <canvas ref={this.state.canvas_ref} className={styles.glcanvas}/>;
+		return <canvas ref={this.state.canvas_ref} className={styles.glcanvas} />;
 	}
 
 	componentWillUnmount()

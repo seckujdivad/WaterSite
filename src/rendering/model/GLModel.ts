@@ -1,4 +1,4 @@
-import Model, {Triangle, Vertex} from "./Model";
+import Model, {Face, Vertex} from "./Model";
 
 class GLModel extends Model
 {
@@ -7,9 +7,9 @@ class GLModel extends Model
 
 	_context: WebGL2RenderingContext;
 
-    constructor(context: WebGL2RenderingContext, triangles: Array<Triangle> = [])
+    constructor(context: WebGL2RenderingContext, faces: Array<Face> = [])
     {
-        super(undefined, undefined, undefined, triangles);
+        super(undefined, undefined, undefined, faces);
 
         this._context = context;
         const gl = this._context;
@@ -33,9 +33,9 @@ class GLModel extends Model
         this.pushVertices();
     };
 
-    addTriangle(triangle: Triangle): void
+    addFace(face: Face): void
 	{
-		super.addTriangle(triangle);
+		super.addFace(face);
         this.pushVertices();
 	}
 
@@ -59,7 +59,7 @@ class GLModel extends Model
 
 function GLModelFromModel(context: WebGL2RenderingContext, model: Model)
 {
-    return new GLModel(context, model.getTriangles());
+    return new GLModel(context, model.getFaces());
 }
 
 export {GLModel as default, GLModelFromModel};

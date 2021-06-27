@@ -3,43 +3,43 @@ import {vec3, vec2, mat4} from "gl-matrix";
 
 class Model
 {
-	_triangles: Array<Triangle>;
+	_faces: Array<Face>;
 
 	position: vec3;
 	rotation: vec3;
 	scale: vec3;
 
-	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), triangles: Array<Triangle> = [])
+	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [])
 	{
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
 
-		this._triangles = triangles;
+		this._faces = faces;
 	};
 
 	toArray(): Array<number>
 	{
-		let nums_from_each_triangle = this._triangles.map(triangle => triangle.toArray());
+		let nums_from_each_triangle = this._faces.map(triangle => triangle.toArray());
 		return [].concat(...nums_from_each_triangle);
 	}
 
-	getTriangles(): Array<Triangle>
+	getFaces(): Array<Face>
 	{
-		return this._triangles;
+		return this._faces;
 	}
 
-	addTriangle(triangle: Triangle): void
+	addFace(face: Face): void
 	{
-		this._triangles.push(triangle);
+		this._faces.push(face);
 	}
 
 	get num_triangles(): number
 	{
 		let num_triangles = 0;
-		for (const _ of this.getTriangles())
+		for (const face of this.getFaces())
 		{
-			num_triangles += 1;
+			num_triangles += face.numTriangles();
 		}
 		return num_triangles;
 	}
@@ -65,30 +65,14 @@ class Model
 	}
 };
 
-class Triangle
+class Face
 {
 	vertices: Array<Vertex>;
 	normal: vec3;
 	
 	constructor(normal: vec3, vertices: Array<Vertex> = [])
 	{
-		if (vertices.length < 3)
-		{
-			for (let i = vertices.length; i < 3; i++)
-			{
-				vertices.push(new Vertex());
-			}
-		}
-		else if (vertices.length > 3)
-		{
-			while (vertices.length > 3)
-			{
-				vertices.pop();
-			}
-		}
-
 		this.vertices = vertices;
-		Object.seal(this.vertices);
 
 		this.normal = normal;
 	}
@@ -96,8 +80,17 @@ class Triangle
 	toArray(): Array<number>
 	{
 		let tangent = this.tangent;
-		let nums_from_each_vertex = this.vertices.map(
-			function (this: Triangle, vertex: Vertex)
+
+		let vertices: Array<Vertex> = [];
+		for (let i = 2; i < this.vertices.length; i++)
+		{
+			vertices.push(this.vertices[0]);
+			vertices.push(this.vertices[i - 1]);
+			vertices.push(this.vertices[i]);
+		}
+
+		let nums_from_each_vertex = vertices.map(
+			function (this: Face, vertex: Vertex)
 			{
 				let values = vertex.toArray();
 				values.push(this.normal[0], this.normal[1], this.normal[2]);
@@ -130,6 +123,11 @@ class Triangle
 
 		return tangent;
 	}
+
+	numTriangles()
+	{
+		return this.vertices.length - 2;
+	}
 };
 
 class Vertex
@@ -153,4 +151,4 @@ class Vertex
 	}
 };
 
-export {Model as default, Triangle, Vertex};
+export {Model as default, Face, Vertex};
