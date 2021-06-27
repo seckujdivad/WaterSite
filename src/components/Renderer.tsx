@@ -21,7 +21,7 @@ interface IState
 	render_timer_id: number;
 };
 
-let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContext, models: Array<Model>): Array<GLModel>
+let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContextStrict, models: Array<Model>): Array<GLModel>
 {
 	return models.map(model => new GLModel(context, model));
 });
@@ -52,7 +52,9 @@ class Renderer extends React.Component<IProps, IState>
 
 	renderGL()
 	{
-		const engine = getEngine(this.state.canvas_ref.current.getContext("webgl2"));
+		const context: WebGL2RenderingContext = this.state.canvas_ref.current.getContext("webgl2");
+		const strict_context = context as any as WebGL2RenderingContextStrict;
+		const engine = getEngine(strict_context);
 		let models = GLModelsFromModelsCached(engine.getContext(), this.props.models);
 		engine.render(models, this.props.camera);
 	}

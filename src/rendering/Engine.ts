@@ -33,12 +33,12 @@ async function queryShaders()
 
 class Engine
 {
-	_context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContextStrict;
 
 	_shader_program: ShaderProgram;
 	_texture_manager: TextureManager;
 
-	constructor(context: WebGL2RenderingContext)
+	constructor(context: WebGL2RenderingContextStrict)
 	{
 		this._context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback, forEachWebGLCall);
 		if (this._context === null)

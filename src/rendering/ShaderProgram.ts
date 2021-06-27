@@ -1,13 +1,13 @@
 class ShaderProgram
 {
-	_context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContextStrict;
 
 	_obj: WebGLProgram;
 
 	_uniforms: Map<string, WebGLUniformLocation>;
 	_textures: Map<string, WebGLTexture>;
 
-	constructor(context: WebGL2RenderingContext, vertex_shader_source: string, fragment_shader_source: string)
+	constructor(context: WebGL2RenderingContextStrict, vertex_shader_source: string, fragment_shader_source: string)
 	{
 		this._context = context;
 		const gl = this._context;
@@ -72,7 +72,8 @@ class ShaderProgram
 		for (const [name, texture] of this._textures)
 		{
 			const uniform: WebGLUniformLocation = this._uniforms.get(name);
-			gl.activeTexture(gl.TEXTURE0 + i + 1);
+			let texture_unit = gl.TEXTURE0 + i + 1 as WebGLRenderingContextStrict.TextureUnit
+			gl.activeTexture(texture_unit);
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.uniform1i(uniform, i + 1);
 			i += 1;

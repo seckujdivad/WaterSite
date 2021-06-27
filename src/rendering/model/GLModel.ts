@@ -6,11 +6,11 @@ class GLModel extends Model
     _vao: WebGLVertexArrayObject;
 	_vbo: WebGLBuffer;
 
-	_context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContextStrict;
 
     _lastToArray: Array<number>;
 
-    constructor(context: WebGL2RenderingContext, model: Model)
+    constructor(context: WebGL2RenderingContextStrict, model: Model)
     {
         super(model.position, model.rotation, model.scale, model._faces, model.textures);
 

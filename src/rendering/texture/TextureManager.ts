@@ -5,11 +5,11 @@ import Texture, {TextureType} from "./Texture";
 
 class TextureManager
 {
-	_context: WebGL2RenderingContext;
+	_context: WebGL2RenderingContextStrict;
 
 	_textures: Map<string, WebGLTexture>;
 
-	constructor(context: WebGL2RenderingContext)
+	constructor(context: WebGL2RenderingContextStrict)
 	{
 		this._context = context;
 		this._textures = new Map();

@@ -5,5 +5,9 @@
 		"target": "es2021",
 		"moduleResolution": "node",
 		"sourceMap": true
-	}
+	},
+	"include": [
+        "node_modules/webgl-strict-types/index.d.ts",
+		"src/"
+    ]
 }
