@@ -10,7 +10,15 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
+				test: /(?<!module)\.css$/,
+				include: path.resolve(__dirname, "src"),
+				use: [
+					"style-loader",
+					"css-loader"
+				]
+			},
+			{
+				test: /\.module\.css$/,
 				include: path.resolve(__dirname, "src"),
 				use: [
 					"style-loader",
@@ -43,7 +51,7 @@ module.exports = {
 				]
 			},
 			{
-				test: /\.ts$/,
+				test: /(?<!\.d)\.ts$/,
 				include: path.resolve(__dirname, "src"),
 				use: [
 					{
