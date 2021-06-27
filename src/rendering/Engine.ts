@@ -44,7 +44,8 @@ class Engine
 		}
 
 		const gl = this._context;
-		gl.disable(gl.CULL_FACE);
+		gl.enable(gl.CULL_FACE);
+		gl.cullFace(gl.BACK);
 
 		this._shader_program = null;
 
