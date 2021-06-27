@@ -1,7 +1,8 @@
 import {vec3} from "gl-matrix";
 
-import ModelPresets, {modelFromPreset} from "./rendering/model/ModelPresets";
 import Model from "./rendering/model/Model";
+import ModelPresets, {modelFromPreset} from "./rendering/model/ModelPresets";
+import {loadPLYModelFromURL} from "./rendering/model/PlyLoader";
 import Camera from "./rendering/Camera";
 
 function getCamera()
@@ -11,7 +12,12 @@ function getCamera()
 
 function getModels()
 {
-    return [modelFromPreset(new Model(), ModelPresets.FlatPlane)];
+    let cube = new Model();
+    loadPLYModelFromURL(cube, "./cube.ply");
+
+    return [
+        cube
+    ];
 }
 
 export {getCamera, getModels};
