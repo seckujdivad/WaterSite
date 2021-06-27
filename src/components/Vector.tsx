@@ -13,6 +13,7 @@ interface IFieldStyle
 
 interface IProps
 {
+	className?: string;
 	styles: Array<IFieldStyle>;
 	values: Array<number>;
 	onChange: (values: Array<number>) => void;
@@ -58,7 +59,13 @@ class Vector extends React.Component<IProps, IState>
 			);
 		}
 
-		return <div className={styles.Vector}>{fields}</div>;
+		let class_name = styles.Vector;
+		if (this.props.className !== undefined)
+		{
+			class_name = this.props.className + " " + class_name;
+		}
+
+		return <div className={class_name}>{fields}</div>;
 	}
 
 	getNumValues()
