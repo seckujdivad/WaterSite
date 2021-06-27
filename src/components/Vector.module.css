@@ -1,9 +1,21 @@
+.Vector
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.VectorElement
+{
+    display: flex;
+    flex-direction: row;
+}
+
 .Field
 {
-
+    width: 100%;
 }
 
 .FieldLabel
 {
-    
+    white-space: nowrap;
 }
