@@ -78,19 +78,23 @@ class App extends React.Component<IProps, IState>
 					<div className={styles.VectorControlsBody}>
 						<div className={styles.VectorControl}>
 							<div className={styles.VectorControlHeader}>Position</div>
-							<Vector className={styles.VectorControlVector} onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)} styles={[
-								{label: "X", min: -10, max: 10, step: 0.01},
-								{label: "Y", min: -10, max: 10, step: 0.01},
-								{label: "Z", min: -10, max: 10, step: 0.01}
-							]} />
+							<Vector className={styles.VectorControlVector} onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)}
+								defaultStyle={{min: -10, max: 10, step: 0.01}}
+								styles={[
+									{label: "X"},
+									{label: "Y"},
+									{label: "Z"}
+								]} />
 						</div>
 						<div className={styles.VectorControl}>
 							<div className={styles.VectorControlHeader}>Rotation</div>
-							<Vector className={styles.VectorControlVector} onChange={this.rotateCamera.bind(this)} values={vec3ToArray(this.state.camera.rotation)} styles={[
-								{label: "X", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01},
-								{label: "Y", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01},
-								{label: "Z", min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}
-							]} />
+							<Vector className={styles.VectorControlVector} onChange={this.rotateCamera.bind(this)} values={vec3ToArray(this.state.camera.rotation)}
+								defaultStyle={{min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}}
+								styles={[
+									{label: "X"},
+									{label: "Y"},
+									{label: "Z"}
+								]} />
 						</div>
 					</div>
 				</div>

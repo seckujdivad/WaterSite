@@ -5,16 +5,17 @@ import styles from "./Vector.module.css";
 
 interface IFieldStyle
 {
-	label: string;
-	min: number;
-	max: number;
-	step: number;
+	label?: string;
+	min?: number;
+	max?: number;
+	step?: number;
 }
 
 interface IProps
 {
 	className?: string;
 	styles: Array<IFieldStyle>;
+	defaultStyle?: IFieldStyle;
 	values: Array<number>;
 	onChange: (values: Array<number>) => void;
 };
@@ -51,6 +52,49 @@ class Vector extends React.Component<IProps, IState>
 		for (let i = 0; i < this.getNumValues(); i++)
 		{
 			const style = this.props.styles[i];
+			if (this.props.defaultStyle !== undefined)
+			{
+				if (style.label === undefined)
+				{
+					style.label = this.props.defaultStyle.label;
+				}
+
+				if (style.min === undefined)
+				{
+					style.min = this.props.defaultStyle.min;
+				}
+
+				if (style.max === undefined)
+				{
+					style.max = this.props.defaultStyle.max;
+				}
+
+				if (style.step === undefined)
+				{
+					style.step = this.props.defaultStyle.step;
+				}
+			}
+
+			if (style.label === undefined)
+			{
+				throw new Error("'label' must be defined in at least one of defaultStyle or every per-axis style");
+			}
+
+			if (style.min === undefined)
+			{
+				throw new Error("'min' must be defined in at least one of defaultStyle or every per-axis style");
+			}
+
+			if (style.max === undefined)
+			{
+				throw new Error("'max' must be defined in at least one of defaultStyle or every per-axis style");
+			}
+
+			if (style.step === undefined)
+			{
+				throw new Error("'step' must be defined in at least one of defaultStyle or every per-axis style");
+			}
+
 			fields.push(
 				<div key={i} className={styles.VectorElement}>
 					<div className={styles.FieldLabel}>{style.label}</div>
