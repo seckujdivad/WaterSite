@@ -14,9 +14,13 @@ interface IFieldStyle
 interface IProps
 {
 	className?: string;
+	disabled?: boolean;
+
 	styles: Array<IFieldStyle>;
 	defaultStyle?: IFieldStyle;
+
 	values: Array<number>;
+
 	onChange: (values: Array<number>) => void;
 };
 
@@ -98,7 +102,9 @@ class Vector extends React.Component<IProps, IState>
 			fields.push(
 				<div key={i} className={styles.VectorElement}>
 					<div className={styles.FieldLabel}>{style.label}</div>
-					<input className={styles.Field} type="range" min={style.min} max={style.max} step={style.step} value={this.props.values[i]} onChange={this.valueChanged.bind(this, i)} />
+					<input disabled={this.props.disabled} className={styles.Field} type="range"
+						min={style.min} max={style.max} step={style.step} value={this.props.values[i]}
+						onChange={this.valueChanged.bind(this, i)} />
 				</div>
 			);
 		}
