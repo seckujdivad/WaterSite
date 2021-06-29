@@ -4,7 +4,6 @@ import memoizeOne from "memoize-one";
 import styles from "./Renderer.module.css";
 
 import Model from "../rendering/model/Model";
-import GLModel from "../rendering/model/GLModel";
 import Engine from "../rendering/Engine";
 import Camera from "../rendering/Camera";
 

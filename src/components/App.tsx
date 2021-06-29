@@ -54,7 +54,7 @@ class App extends React.Component<IProps, IState>
 			},
 
 			camera: getCamera(),
-			models: getModels(),
+			models: getModels(model => this.setState({})),
 			selected_model: null
 		};
 	}
