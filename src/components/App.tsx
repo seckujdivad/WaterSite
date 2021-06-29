@@ -65,84 +65,78 @@ class App extends React.Component<IProps, IState>
 		for (let i = 0; i < this.state.layers.length; i++)
 		{
 			const layer = this.state.layers[i];
-			layer_components.push(
-				<SceneLayer key={i} row={i} numRows={this.state.layers.length} onMovePressed={this.moveRow.bind(this, i)}
+			layer_components.push(<SceneLayer key={i} row={i} numRows={this.state.layers.length} onMovePressed={this.moveRow.bind(this, i)}
 				transparency={layer.transparency} onTransparencyChange={this.updateLayerTransparency.bind(this, i)}
-				colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)} />
-			);
+				colour={layer.colour} onColourChange={this.updateLayerColour.bind(this, i)} />);
 		}
 
-		let cameraControls =
-			<div className={styles.VectorControlsBody}>
-				<div className={styles.VectorControl}>
-					<div className={styles.VectorControlHeader}>Position</div>
-					<Vector className={styles.VectorControlVector} onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)}
-						defaultStyle={{min: -10, max: 10, step: 0.01}}
-						styles={[
-							{label: "X"},
-							{label: "Y"},
-							{label: "Z"}
-						]} />
-				</div>
-				<div className={styles.VectorControl}>
-					<div className={styles.VectorControlHeader}>Rotation</div>
-					<Vector className={styles.VectorControlVector} onChange={this.rotateCamera.bind(this)} values={vec3ToArray(this.state.camera.rotation)}
-						defaultStyle={{min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}}
-						styles={[
-							{label: "X"},
-							{label: "Y"},
-							{label: "Z"}
-						]} />
-				</div>
-			</div>;
+		let cameraControls = <div className={styles.VectorControlsBody}>
+			<div className={styles.VectorControl}>
+				<div className={styles.VectorControlHeader}>Position</div>
+				<Vector className={styles.VectorControlVector} onChange={this.moveCamera.bind(this)} values={vec3ToArray(this.state.camera.position)}
+					defaultStyle={{min: -10, max: 10, step: 0.01}}
+					styles={[
+						{label: "X"},
+						{label: "Y"},
+						{label: "Z"}
+					]} />
+			</div>
+			<div className={styles.VectorControl}>
+				<div className={styles.VectorControlHeader}>Rotation</div>
+				<Vector className={styles.VectorControlVector} onChange={this.rotateCamera.bind(this)} values={vec3ToArray(this.state.camera.rotation)}
+					defaultStyle={{min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}}
+					styles={[
+						{label: "X"},
+						{label: "Y"},
+						{label: "Z"}
+					]} />
+			</div>
+		</div>;
 		
 		let hasModelSelected = this.state.selected_model !== null;
 		let modelPosition = hasModelSelected ? vec3ToArray(this.state.selected_model.position) : [0, 0, 0];
 		let modelRotation = hasModelSelected ? vec3ToArray(this.state.selected_model.rotation) : [0, 0, 0];
 		let modelScale = hasModelSelected ? vec3ToArray(this.state.selected_model.scale) : [1, 1, 1];
 
-		let modelControls =
-			<div className={styles.VectorControlsBody}>
-				<div className={styles.VectorControl}>
-					<div className={styles.VectorControlHeader}>Position</div>
-					<Vector className={styles.VectorControlVector} onChange={this.moveModel.bind(this)} values={modelPosition}
-						disabled={!hasModelSelected} defaultStyle={{min: -10, max: 10, step: 0.01}}
-						styles={[
-							{label: "X"},
-							{label: "Y"},
-							{label: "Z"}
-						]} />
-				</div>
-				<div className={styles.VectorControl}>
-					<div className={styles.VectorControlHeader}>Rotation</div>
-					<Vector className={styles.VectorControlVector} onChange={this.rotateModel.bind(this)} values={modelRotation}
-						disabled={!hasModelSelected} defaultStyle={{min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}}
-						styles={[
-							{label: "X"},
-							{label: "Y"},
-							{label: "Z"}
-						]} />
-				</div>
-				<div className={styles.VectorControl}>
-					<div className={styles.VectorControlHeader}>Scale</div>
-					<Vector className={styles.VectorControlVector} onChange={this.scaleModel.bind(this)} values={modelScale}
-						disabled={!hasModelSelected} defaultStyle={{min: 0, max: 10, step: 0.01}}
-						styles={[
-							{label: "X"},
-							{label: "Y"},
-							{label: "Z"}
-						]} />
-				</div>
-			</div>;
+		let modelControls = <div className={styles.VectorControlsBody}>
+			<div className={styles.VectorControl}>
+				<div className={styles.VectorControlHeader}>Position</div>
+				<Vector className={styles.VectorControlVector} onChange={this.moveModel.bind(this)} values={modelPosition}
+					disabled={!hasModelSelected} defaultStyle={{min: -10, max: 10, step: 0.01}}
+					styles={[
+						{label: "X"},
+						{label: "Y"},
+						{label: "Z"}
+					]} />
+			</div>
+			<div className={styles.VectorControl}>
+				<div className={styles.VectorControlHeader}>Rotation</div>
+				<Vector className={styles.VectorControlVector} onChange={this.rotateModel.bind(this)} values={modelRotation}
+					disabled={!hasModelSelected} defaultStyle={{min: -2 * Math.PI, max: 2 * Math.PI, step: 0.01}}
+					styles={[
+						{label: "X"},
+						{label: "Y"},
+						{label: "Z"}
+					]} />
+			</div>
+			<div className={styles.VectorControl}>
+				<div className={styles.VectorControlHeader}>Scale</div>
+				<Vector className={styles.VectorControlVector} onChange={this.scaleModel.bind(this)} values={modelScale}
+					disabled={!hasModelSelected} defaultStyle={{min: 0, max: 10, step: 0.01}}
+					styles={[
+						{label: "X"},
+						{label: "Y"},
+						{label: "Z"}
+					]} />
+			</div>
+		</div>;
 		
 		let selected_model_index = undefined;
 		let model_options = [<option key={-1} value={-1} style={{display: "none"}}>No model selected</option>];
 		for (let i = 0; i < this.state.models.length; i++)
 		{
 			let model = this.state.models[i];
-			model_options.push(<option key={i} value={i}>
-				{model.faces.length + " faces, " + model.getNumVertices() + " vertices @ " + vecToString(model.position)}
-			</option>);
+			model_options.push(<option key={i} value={i}>{model.faces.length + " faces, " + model.getNumVertices() + " vertices @ " + vecToString(model.position)}</option>);
 
 			if (model === this.state.selected_model)
 			{
