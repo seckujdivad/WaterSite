@@ -43,4 +43,14 @@ function arrayToVec2(values: Array<number>): vec2
 	return vec2.fromValues(values[0], values[1]);
 }
 
-export {vec4ToArray, vec3ToArray, vec2ToArray, arrayToVec4, arrayToVec3, arrayToVec2};
+function vecToString(values: vec4 | vec3 | vec2)
+{
+	let result = "";
+	for (let i = 0; i < values.length - 1; i++)
+	{
+		result += values[i].toString() + ", ";
+	}
+	return result + values[values.length - 1];
+}
+
+export {vec4ToArray, vec3ToArray, vec2ToArray, arrayToVec4, arrayToVec3, arrayToVec2, vecToString};
