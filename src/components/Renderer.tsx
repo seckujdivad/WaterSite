@@ -21,6 +21,7 @@ interface IState
 	render_timer_id: number;
 };
 
+//fix - ref doesn't change but underlying values do
 let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContextStrict, models: Array<Model>): Array<GLModel>
 {
 	return models.map(model => new GLModel(context, model));
