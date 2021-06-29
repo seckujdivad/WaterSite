@@ -17,7 +17,7 @@ uniform mat4 perspective;
 
 void main()
 {
-	mat4 transformation = transformationModel * transformationCamera;
+	mat4 transformation = transformationCamera * transformationModel;
 
 	vertPositionModel = inPosition;
 	vertUV = inUV;
