@@ -21,12 +21,6 @@ interface IState
 	render_timer_id: number;
 };
 
-//fix - ref doesn't change but underlying values do
-let GLModelsFromModelsCached = memoizeOne(function (context: WebGL2RenderingContextStrict, models: Array<Model>): Array<GLModel>
-{
-	return models.map(model => new GLModel(context, model));
-});
-
 let getEngine = memoizeOne(context => new Engine(context));
 
 class Renderer extends React.Component<IProps, IState>
@@ -56,9 +50,8 @@ class Renderer extends React.Component<IProps, IState>
 		const context: WebGL2RenderingContext = this.state.canvas_ref.current.getContext("webgl2");
 		const strict_context = context as any as WebGL2RenderingContextStrict;
 		const engine = getEngine(strict_context);
-		let models = GLModelsFromModelsCached(engine.getContext(), this.props.models);
-		engine.render(models, this.props.camera);
+		engine.render(this.props.models, this.props.camera);
 	}
-}
+};
 
 export default Renderer;

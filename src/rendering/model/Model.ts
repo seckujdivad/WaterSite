@@ -4,7 +4,7 @@ import ModelTextures from "../texture/ModelTextures";
 
 class Model
 {
-	_faces: Array<Face>;
+	faces: Array<Face>;
 
 	position: vec3;
 	rotation: vec3;
@@ -20,79 +20,43 @@ class Model
 
 		this.textures = textures;
 
-		this._faces = faces;
+		this.faces = faces;
 	}
 
 	toArray(): Array<number>
 	{
-		let nums_from_each_triangle = this._faces.map(triangle => triangle.toArray());
+		let nums_from_each_triangle = this.faces.map(triangle => triangle.toArray());
 		return [].concat(...nums_from_each_triangle);
 	}
 
-	getFaces(): Array<Face>
-	{
-		return this._faces;
-	}
-
-	addFace(face: Face): void
-	{
-		this._faces.push(face);
-	}
-
-	get num_triangles(): number
+	getNumTriangles(): number
 	{
 		let num_triangles = 0;
-		for (const face of this.getFaces())
+		for (const face of this.faces)
 		{
 			num_triangles += face.numTriangles();
 		}
 		return num_triangles;
 	}
 
-	get num_vertices(): number
+	getNumVertices(): number
 	{
-		return this.num_triangles * 3;
+		return this.getNumTriangles() * 3;
 	}
 
 	getTransformation(): mat4
 	{
 		let transformation: mat4 = mat4.create();
 
-		mat4.scale(transformation, transformation, this.scale);
-		
+		mat4.translate(transformation, transformation, this.position);
+
 		mat4.rotateX(transformation, transformation, this.rotation[0]);
 		mat4.rotateY(transformation, transformation, this.rotation[1]);
 		mat4.rotateZ(transformation, transformation, this.rotation[2]);
 
-		mat4.translate(transformation, transformation, this.position);
+		mat4.scale(transformation, transformation, this.scale);
 
 		return transformation;
-	}
-
-	compare(rhs: Model)
-	{
-		if (vec3.equals(this.position, rhs.position) && vec3.equals(this.rotation, rhs.rotation) && vec3.equals(this.scale, rhs.scale))
-		{
-			if (this._faces.length == rhs._faces.length)
-			{
-				for (let i = 0; i < this._faces.length; i++)
-				{
-					if (!this._faces[i].compare(rhs._faces[i]))
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
 	}
 };
 
@@ -159,32 +123,6 @@ class Face
 	{
 		return this.vertices.length - 2;
 	}
-
-	compare(rhs: Face)
-	{
-		if (vec3.equals(this.normal, rhs.normal))
-		{
-			if (this.vertices.length == rhs.vertices.length)
-			{
-				for (let i = 0; i < this.vertices.length; i++)
-				{
-					if (!this.vertices[i].compare(rhs.vertices[i]))
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
 };
 
 class Vertex
@@ -205,11 +143,6 @@ class Vertex
 		result.push(this.uv[0], this.uv[1]);
 
 		return result;
-	}
-
-	compare(rhs: Vertex): boolean
-	{
-		return vec3.equals(this.position, rhs.position) && vec2.equals(this.uv, rhs.uv);
 	}
 };
 

@@ -168,7 +168,7 @@ function loadPLYModel(model: Model, ply_contents: string): Model //this function
 		let normal = vec3.fromValues(0, 0, 0);
 		vec3.normalize(normal, sum_vec);
 
-		model.addFace(new Face(normal, vertex_indices.map(index => vertices[index])));
+		model.faces.push(new Face(normal, vertex_indices.map(index => vertices[index])));
 	}
 
 	return model;

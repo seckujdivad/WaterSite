@@ -1,19 +1,41 @@
-import Model, {Face} from "./Model";
+import Model from "./Model";
 
 
-class GLModel extends Model
+function arraysAreEqual<T>(first: Array<T>, second: Array<T>): boolean
+{
+    if (first === undefined || second === undefined)
+    {
+        return false;
+    }
+
+    if (first.length !== second.length)
+    {
+        return false;
+    }
+    else
+    {
+        for (let i = 0; i < first.length; i++)
+        {
+            if (first[i] !== second[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class GLModel
 {
     _vao: WebGLVertexArrayObject;
 	_vbo: WebGLBuffer;
 
 	_context: WebGL2RenderingContextStrict;
 
-    _lastToArray: Array<number>;
+    _last_vertices: Array<number>;
 
-    constructor(context: WebGL2RenderingContextStrict, model: Model)
+    constructor(context: WebGL2RenderingContextStrict, vertices: Array<number> = [])
     {
-        super(model.position, model.rotation, model.scale, model._faces, model.textures);
-
         this._context = context;
         const gl = this._context;
 
@@ -33,25 +55,19 @@ class GLModel extends Model
 		gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 5 * SIZEOF_FLOAT);
 		gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 11 * SIZEOF_FLOAT, 8 * SIZEOF_FLOAT);
 
-        this.pushVertices();
+        this.setVertices(vertices);
     }
 
-    addFace(face: Face): void
-	{
-		super.addFace(face);
-        this.pushVertices();
-	}
-
-    pushVertices(): void
+    setVertices(vertices: Array<number>): void
     {
         const gl = this._context;
 
-        let positions = this.toArray();
-        if (positions !== this._lastToArray)
+        let positions = vertices;
+        if (!arraysAreEqual(positions, this._last_vertices))
         {
             gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-            this._lastToArray = positions;
+            this._last_vertices = positions;
         }
     }
 

@@ -141,7 +141,7 @@ class App extends React.Component<IProps, IState>
 		{
 			let model = this.state.models[i];
 			model_options.push(<option key={i} value={i}>
-				{model.getFaces().length + " faces, " + model.num_vertices + " vertices @ " + vecToString(model.position)}
+				{model.faces.length + " faces, " + model.getNumVertices() + " vertices @ " + vecToString(model.position)}
 			</option>);
 
 			if (model === this.state.selected_model)

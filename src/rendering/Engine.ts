@@ -4,6 +4,7 @@ import WebGLDebugUtils from "webgl-debug";
 import narrowCanvas from "./HTMLCanvasTypes";
 import ShaderProgram from "./ShaderProgram";
 import GLModel from "./model/GLModel";
+import Model from "./model/Model";
 import Camera from "./Camera";
 import TextureManager from "./texture/TextureManager";
 
@@ -38,6 +39,8 @@ class Engine
 	_shader_program: ShaderProgram;
 	_texture_manager: TextureManager;
 
+	_gl_models: Array<GLModel>;
+
 	constructor(context: WebGL2RenderingContextStrict)
 	{
 		this._context = WebGLDebugUtils.makeDebugContext(context, WebGLErrorCallback, forEachWebGLCall);
@@ -48,6 +51,8 @@ class Engine
 
 		this._texture_manager = new TextureManager(this._context);
 
+		this._gl_models = [];
+
 		const gl = this._context;
 		gl.enable(gl.CULL_FACE);
 		gl.cullFace(gl.BACK);
@@ -57,16 +62,37 @@ class Engine
 		this.loadShaderProgram();
 	}
 
-	render(models: Array<GLModel>, camera: Camera)
+	render(models: Array<Model>, camera: Camera)
 	{
 		const gl = this._context;
 
+		//set up viewport width
 		const canvas = narrowCanvas(gl.canvas);
-
 		gl.canvas.width = canvas.clientWidth;
 		gl.canvas.height = canvas.clientHeight;
-
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+		//create GL models
+		// remove excess GLModels
+		while (this._gl_models.length > models.length)
+		{
+			this._gl_models.pop();
+		}
+
+		// set vertices for existing GLModels
+		for (let i = 0; i < this._gl_models.length; i++)
+		{
+			this._gl_models[i].setVertices(models[i].toArray());
+		}
+
+		// create more GLModels if required
+		if (this._gl_models.length < models.length)
+		{
+			for (let i = this._gl_models.length; i < models.length; i++)
+			{
+				this._gl_models.push(new GLModel(this._context, models[i].toArray()));
+			}
+		}
 		
 		if (this._shader_program !== null)
 		{
@@ -83,16 +109,18 @@ class Engine
 			gl.clearColor(1, 1, 1, 1);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			
-			for (const model of models)
+			for (let i = 0; i < models.length; i++)
 			{
+				const model = models[i];
+				const glmodel = this._gl_models[i];
+
 				this._shader_program.addTexture("textureColour", this._texture_manager.getTexture(model.textures.colour));
 				this._shader_program.addTexture("textureNormal", this._texture_manager.getTexture(model.textures.normal));
 
-				model.bind();
-				model.pushVertices();
+				glmodel.bind();
 
 				gl.uniformMatrix4fv(this._shader_program.getUniform("transformationModel"), false, model.getTransformation());
-				gl.drawArrays(gl.TRIANGLES, 0, model.num_vertices);
+				gl.drawArrays(gl.TRIANGLES, 0, model.getNumVertices());
 			}
 		}
 	}
