@@ -144,7 +144,7 @@ class App extends React.Component<IProps, IState>
 			}
 		}
 		
-		let modelSelection = <select value={selected_model_index} onChange={this.newModelSelected.bind(this)}>{model_options}</select>;
+		let modelSelection = <select value={selected_model_index} onChange={this.newModelSelected.bind(this)} className={styles.ModelSelection}>{model_options}</select>;
 
 		return <>
 			<div className={styles.App}>{layer_components}</div>
