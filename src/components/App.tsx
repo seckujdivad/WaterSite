@@ -5,6 +5,7 @@ import styles from "./App.module.css";
 import SceneLayer from "./SceneLayer";
 import Vector from "./Vector";
 import Renderer from "./Renderer";
+import ControllableCamera from "./ControllableCamera";
 
 import {vec3ToArray, arrayToVec3, vecToString} from "../vectorutils";
 import Model from "../rendering/model/Model";
@@ -148,7 +149,11 @@ class App extends React.Component<IProps, IState>
 
 		return <>
 			<div className={styles.App}>{layer_components}</div>
-			<Renderer models={this.state.models} camera={this.state.camera} />
+			<ControllableCamera
+				camera={this.state.camera} moveSpeed={0.1} lookSpeed={20} updateInterval={10}
+				onCameraChanged={((camera: Camera) => this.setState({camera: camera})).bind(this)}>
+				<Renderer models={this.state.models} camera={this.state.camera} />
+			</ControllableCamera>
 			<div className={styles.VectorControls}>
 				<div className={styles.VectorControlsHeader}>Camera</div>
 				{cameraControls}
