@@ -59,8 +59,8 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 				let move_pixels = vec2.fromValues(event.movementX, event.movementY);
 				let look_fraction = vec2.div(vec2.create(), move_pixels, div_dimensions);
 
-				this.props.camera.rotation[1] -= look_fraction[0] * this.props.camera.vfov * aspect_ratio;
-				this.props.camera.rotation[0] -= look_fraction[1] * this.props.camera.vfov;
+				this.props.camera.rotation[1] -= this.props.lookSpeed * look_fraction[0] * this.props.camera.vfov * aspect_ratio;
+				this.props.camera.rotation[0] -= this.props.lookSpeed * look_fraction[1] * this.props.camera.vfov;
 			}
 		}
 	}
@@ -147,7 +147,7 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 				}
 
 				vec3.scale(translation, translation, this.props.moveSpeed);
-				rotateVector(translation, this.props.camera.rotation);
+				translation = rotateVector(translation, this.props.camera.rotation);
 				vec3.add(this.props.camera.position, this.props.camera.position, translation);
 
 				if (this.props.onCameraChanged !== undefined)

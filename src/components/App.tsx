@@ -150,7 +150,7 @@ class App extends React.Component<IProps, IState>
 		return <>
 			<div className={styles.App}>{layer_components}</div>
 			<ControllableCamera
-				camera={this.state.camera} moveSpeed={0.1} lookSpeed={20} updateInterval={10}
+				camera={this.state.camera} moveSpeed={0.02} lookSpeed={3} updateInterval={10}
 				onCameraChanged={((camera: Camera) => this.setState({camera: camera})).bind(this)}>
 				<Renderer models={this.state.models} camera={this.state.camera} />
 			</ControllableCamera>
