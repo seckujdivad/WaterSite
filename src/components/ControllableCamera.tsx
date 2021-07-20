@@ -1,6 +1,6 @@
-import React from "react";
+import React, {RefObject} from "react";
 
-import {vec3} from "gl-matrix";
+import {vec3, vec2} from "gl-matrix";
 
 import Camera from "../rendering/Camera";
 import rotateVector from "../rendering/TranslateLocally";
@@ -20,6 +20,9 @@ interface IState {};
 class ControllableCamera extends React.PureComponent<IProps, IState>
 {
 	_timer_id: number;
+	_div_ref: RefObject<HTMLDivElement>;
+
+	_listener_pointer_lock: (event: Event) => void;
 
 	constructor(props: IProps)
 	{
@@ -28,11 +31,15 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 		this.state = {};
 
 		this._timer_id = null;
+		this._div_ref = React.createRef();
+
+		this._listener_pointer_lock = this.onPointerLockChange.bind(this);
 	}
 
 	render()
 	{
 		return <div
+			ref={this._div_ref}
 			tabIndex={0}
 			onClick={this.onClicked.bind(this)}
 			onMouseMove={this.onMouseMove.bind(this)}>
@@ -42,9 +49,19 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 
 	onMouseMove(event: React.MouseEvent<HTMLDivElement>)
 	{
-		if (this.cameraIsBeingControlled)
+		if (this.hasCameraControl && this.props.camera !== null)
 		{
+			let div_dimensions = vec2.fromValues(this._div_ref.current.clientWidth, this._div_ref.current.clientHeight);
+			if (div_dimensions[0] > 0 && div_dimensions[1] > 0)
+			{
+				let aspect_ratio = div_dimensions[0] / div_dimensions[1];
 
+				let move_pixels = vec2.fromValues(event.movementX, event.movementY);
+				let look_fraction = vec2.div(vec2.create(), move_pixels, div_dimensions);
+
+				this.props.camera.rotation[1] -= look_fraction[0] * this.props.camera.vfov * aspect_ratio;
+				this.props.camera.rotation[0] -= look_fraction[1] * this.props.camera.vfov;
+			}
 		}
 	}
 
@@ -58,27 +75,37 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 		if (enable && this._timer_id === null)
 		{
 			this._timer_id = window.setInterval(this.movementLoop.bind(this), this.props.updateInterval);
+
+			this._div_ref.current.requestPointerLock();
 		}
 		else if (!enable && this._timer_id !== null)
 		{
 			window.clearInterval(this._timer_id);
 			this._timer_id = null;
+
+			document.exitPointerLock();
 		}
+	}
+
+	componentDidMount()
+	{
+		document.addEventListener("pointerlockchange", this._listener_pointer_lock);
 	}
 
 	componentWillUnmount()
 	{
+		document.removeEventListener("pointerlockchange", this._listener_pointer_lock);
 		this.setControlCamera(false);
 	}
 
-	get cameraIsBeingControlled(): boolean
+	get hasCameraControl(): boolean
 	{
 		return this._timer_id !== null;
 	}
 
 	movementLoop()
 	{
-		if (this.cameraIsBeingControlled)
+		if (this.hasCameraControl)
 		{
 			if (keyMonitor.keyIsPressed("Escape"))
 			{
@@ -129,6 +156,23 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 				}
 			}
 		}
+	}
+
+	onPointerLockChange(event: Event)
+	{
+		if (this.hasPointerLock && !this.hasCameraControl)
+		{
+			this.setControlCamera(true);
+		}
+		else if (!this.hasPointerLock && this.hasCameraControl)
+		{
+			this.setControlCamera(false);
+		}
+	}
+
+	get hasPointerLock(): boolean
+	{
+		return document.pointerLockElement === this._div_ref.current;
 	}
 };
 
