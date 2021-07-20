@@ -1,6 +1,3 @@
-import Model from "./Model";
-
-
 function arraysAreEqual<T>(first: Array<T>, second: Array<T>): boolean
 {
 	if (first === undefined || second === undefined)
