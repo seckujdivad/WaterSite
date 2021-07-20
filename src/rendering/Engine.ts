@@ -56,6 +56,8 @@ class Engine
 		const gl = this._context;
 		gl.enable(gl.CULL_FACE);
 		gl.cullFace(gl.BACK);
+		
+		gl.enable(gl.DEPTH_TEST);
 
 		this._shader_program = null;
 
