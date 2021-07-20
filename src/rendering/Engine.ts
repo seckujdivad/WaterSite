@@ -100,7 +100,7 @@ class Engine
 
 			//set up uniforms
 			let perspective = mat4.create();
-			mat4.perspective(perspective, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 100);
+			mat4.perspective(perspective, camera.vfov, gl.canvas.width / gl.canvas.height, 0.1, 100);
 			gl.uniformMatrix4fv(this._shader_program.getUniform("perspective"), false, perspective);
 
 			gl.uniformMatrix4fv(this._shader_program.getUniform("transformationCamera"), false, camera.getTransformation());

@@ -6,10 +6,13 @@ class Camera
 	position: vec3;
 	rotation: vec3;
 
-	constructor(position: vec3, rotation: vec3)
+	vfov: number; //vertical field of view, radians
+
+	constructor(position: vec3, rotation: vec3, vfov: number)
 	{
 		this.position = position;
 		this.rotation = rotation;
+		this.vfov = vfov;
 	}
 
 	getTransformation(): mat4
