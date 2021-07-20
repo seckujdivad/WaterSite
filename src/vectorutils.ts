@@ -53,4 +53,19 @@ function vecToString(values: vec4 | vec3 | vec2, num_places: number = 0)
 	return result + values[values.length - 1].toFixed(num_places);
 }
 
-export {vec4ToArray, vec3ToArray, vec2ToArray, arrayToVec4, arrayToVec3, arrayToVec2, vecToString};
+function vec3To4(vec: vec3)
+{
+	return vec4.fromValues(vec[0], vec[1], vec[2], 0);
+}
+
+function vec4To3(vec: vec4)
+{
+	return vec3.fromValues(vec[0], vec[1], vec[2]);
+}
+
+export {
+	vec4ToArray, vec3ToArray, vec2ToArray,
+	arrayToVec4, arrayToVec3, arrayToVec2,
+	vecToString,
+	vec4To3, vec3To4
+};
