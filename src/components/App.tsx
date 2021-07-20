@@ -161,6 +161,7 @@ class App extends React.Component<IProps, IState>
 				{modelControls}
 			</div>
 			{modelSelection}
+			<button className={styles.ResetButton} onClick={this.resetScene.bind(this)}>Reset</button>
 		</>;
 	}
 
@@ -180,11 +181,6 @@ class App extends React.Component<IProps, IState>
 			state.layers[index].colour = colour;
 			return state;
 		})
-	}
-
-	getLayers()
-	{
-		return JSON.parse(JSON.stringify(this.state.layers)); //I wish there was a better way to deep copy
 	}
 
 	moveRow(row_index: number, move_up: boolean)
@@ -259,6 +255,15 @@ class App extends React.Component<IProps, IState>
 		this.setState(function (state)
 		{
 			return {selected_model: state.models[selected_index]};
+		});
+	}
+
+	resetScene()
+	{
+		this.setState({
+			models: getModels(),
+			camera: getCamera(),
+			selected_model: null
 		});
 	}
 };
