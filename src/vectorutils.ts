@@ -63,13 +63,12 @@ function vec4To3(vec: vec4)
 	return vec3.fromValues(vec[0], vec[1], vec[2]);
 }
 
-function createRotation(rotation: vec3, inverse: boolean = false): mat4
+function applyRotation(out: mat4, rotation: vec3, inverse: boolean = false): mat4
 {
-	let transformation = mat4.create();
-	mat4.rotateX(transformation, transformation, inverse ? 0 - rotation[0] : rotation[0]);
-	mat4.rotateY(transformation, transformation, inverse ? 0 - rotation[1] : rotation[1]);
-	mat4.rotateZ(transformation, transformation, inverse ? 0 - rotation[2] : rotation[2]);
-	return transformation;
+	mat4.rotateX(out, out, inverse ? 0 - rotation[0] : rotation[0]);
+	mat4.rotateY(out, out, inverse ? 0 - rotation[1] : rotation[1]);
+	mat4.rotateZ(out, out, inverse ? 0 - rotation[2] : rotation[2]);
+	return out;
 }
 
 export {
@@ -77,5 +76,5 @@ export {
 	arrayToVec4, arrayToVec3, arrayToVec2,
 	vecToString,
 	vec4To3, vec3To4,
-	createRotation
+	applyRotation
 };
