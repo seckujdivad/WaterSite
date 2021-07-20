@@ -78,47 +78,55 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 
 	movementLoop()
 	{
-		if (this.cameraIsBeingControlled && this.props.camera !== null)
+		if (this.cameraIsBeingControlled)
 		{
-			let translation = vec3.create();
-
-			if (keyMonitor.keyIsPressed("w"))
+			if (keyMonitor.keyIsPressed("Escape"))
 			{
-				vec3.add(translation, translation, vec3.fromValues(0, 0, -1));
+				this.setControlCamera(false);
 			}
 
-			if (keyMonitor.keyIsPressed("s"))
+			if (this.props.camera !== null)
 			{
-				vec3.add(translation, translation, vec3.fromValues(0, 0, 1));
-			}
+				let translation = vec3.create();
 
-			if (keyMonitor.keyIsPressed("d"))
-			{
-				vec3.add(translation, translation, vec3.fromValues(1, 0, 0));
-			}
-			
-			if (keyMonitor.keyIsPressed("a"))
-			{
-				vec3.add(translation, translation, vec3.fromValues(-1, 0, 0));
-			}
-			
-			if (keyMonitor.keyIsPressed("e"))
-			{
-				vec3.add(translation, translation, vec3.fromValues(0, 1, 0));
-			}
-			
-			if (keyMonitor.keyIsPressed("q"))
-			{
-				vec3.add(translation, translation, vec3.fromValues(0, -1, 0));
-			}
+				if (keyMonitor.keyIsPressed("w"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(0, 0, -1));
+				}
 
-			vec3.scale(translation, translation, this.props.moveSpeed);
-			rotateVector(translation, this.props.camera.rotation);
-			vec3.add(this.props.camera.position, this.props.camera.position, translation);
+				if (keyMonitor.keyIsPressed("s"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(0, 0, 1));
+				}
 
-			if (this.props.onCameraChanged !== undefined)
-			{
-				this.props.onCameraChanged(this.props.camera);
+				if (keyMonitor.keyIsPressed("d"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(1, 0, 0));
+				}
+				
+				if (keyMonitor.keyIsPressed("a"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(-1, 0, 0));
+				}
+				
+				if (keyMonitor.keyIsPressed("e"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(0, 1, 0));
+				}
+				
+				if (keyMonitor.keyIsPressed("q"))
+				{
+					vec3.add(translation, translation, vec3.fromValues(0, -1, 0));
+				}
+
+				vec3.scale(translation, translation, this.props.moveSpeed);
+				rotateVector(translation, this.props.camera.rotation);
+				vec3.add(this.props.camera.position, this.props.camera.position, translation);
+
+				if (this.props.onCameraChanged !== undefined)
+				{
+					this.props.onCameraChanged(this.props.camera);
+				}
 			}
 		}
 	}
