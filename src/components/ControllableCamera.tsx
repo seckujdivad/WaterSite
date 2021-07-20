@@ -1,10 +1,10 @@
 import React, {RefObject} from "react";
 
-import {vec3, vec2} from "gl-matrix";
+import {vec4, vec3, vec2} from "gl-matrix";
 
 import Camera from "../rendering/Camera";
-import rotateVector from "../rendering/TranslateLocally";
 import keyMonitor from "../KeyMonitor";
+import {createRotation} from "../vectorutils";
 
 interface IProps
 {
@@ -147,7 +147,8 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 				}
 
 				vec3.scale(translation, translation, this.props.moveSpeed);
-				translation = rotateVector(translation, this.props.camera.rotation);
+				vec3.transformMat4(translation, translation, createRotation(this.props.camera.rotation));
+
 				vec3.add(this.props.camera.position, this.props.camera.position, translation);
 
 				if (this.props.onCameraChanged !== undefined)
