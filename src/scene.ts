@@ -14,8 +14,8 @@ function getCamera()
 function getModels(modelLoadedCallback?: (modelLoaded: Model) => void)
 {
 	let cube = new Model();
-	cube.textures.colour = new Texture(TextureType.URL, "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
-	cube.textures.normal = new Texture(TextureType.URL, "./SeaWavesB_N.jpg");
+	cube.textures.colour = new Texture("./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
+	cube.textures.normal = new Texture("./SeaWavesB_N.jpg");
 	loadPLYModelFromURL(cube, "./cube.ply").then(modelLoadedCallback);
 
 	return [cube];
