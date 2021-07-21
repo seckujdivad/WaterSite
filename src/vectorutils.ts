@@ -107,11 +107,19 @@ function vecModScalar<vec = vec4 | vec3 | vec2>(apply_to: vec, rhs: number): vec
 	return apply_to;
 }
 
+function rotateVec3(apply_to: vec3, rotation: vec3, origin: vec3 = vec3.create()): vec3
+{
+	vec3.rotateX(apply_to, apply_to, origin, rotation[0]);
+	vec3.rotateY(apply_to, apply_to, origin, rotation[1]);
+	vec3.rotateZ(apply_to, apply_to, origin, rotation[2]);
+	return apply_to;
+}
+
 export {
 	vec4ToArray, vec3ToArray, vec2ToArray,
 	arrayToVec4, arrayToVec3, arrayToVec2,
 	vecToString,
 	vec4To3, vec3To4,
-	applyRotation,
+	applyRotation, rotateVec3,
 	vecMod, vecModScalar
 };
