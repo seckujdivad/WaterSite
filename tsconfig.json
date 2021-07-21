@@ -7,7 +7,7 @@
 		"sourceMap": true
 	},
 	"include": [
-        "node_modules/webgl-strict-types/index.d.ts",
+		"node_modules/webgl-strict-types/index.d.ts",
 		"src/**/*"
-    ]
+	]
 }
