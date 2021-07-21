@@ -3,7 +3,7 @@ import {vec3} from "gl-matrix";
 import Model from "./rendering/model/Model";
 import {loadPLYModelFromURL} from "./rendering/model/PlyLoader";
 import Camera from "./rendering/Camera";
-import Texture, {TextureType} from "./rendering/texture/Texture";
+import Texture from "./rendering/texture/Texture";
 
 
 function getCamera()
@@ -14,8 +14,8 @@ function getCamera()
 function getModels(modelLoadedCallback?: (modelLoaded: Model) => void)
 {
 	let cube = new Model();
-	cube.textures.colour = new Texture("./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
-	cube.textures.normal = new Texture("./SeaWavesB_N.jpg");
+	cube.textures.colour = "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg";
+	cube.textures.normal = "./SeaWavesB_N.jpg";
 	loadPLYModelFromURL(cube, "./cube.ply").then(modelLoadedCallback);
 
 	return [cube];

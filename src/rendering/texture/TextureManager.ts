@@ -1,6 +1,6 @@
 import {vec3, vec4} from "gl-matrix";
 
-import Texture, {TextureType} from "./Texture";
+import Texture, {isURL, isVec3, isVec4, hashTexture} from "./Texture";
 
 
 class TextureManager
@@ -17,7 +17,7 @@ class TextureManager
 
 	getTexture(texture: Texture): WebGLTexture
 	{
-		let texture_hash = texture.hash();
+		let texture_hash = hashTexture(texture);
 		if (this._textures.has(texture_hash))
 		{
 			return this._textures.get(texture_hash);
@@ -28,10 +28,8 @@ class TextureManager
 			const gl_texture = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D, gl_texture);
 			
-			if (texture.type === TextureType.URL)
+			if (isURL(texture))
 			{
-				let url = texture.specifier as string;
-
 				//default initialise to 1x1 black texture
 				const pixel = new Uint8Array([0, 0, 0, 255]);
 				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
@@ -47,24 +45,26 @@ class TextureManager
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 				};
-				image.src = url;
+				image.src = texture;
 			}
-			else if (texture.type === TextureType.Vec3 || texture.type === TextureType.Vec4)
+			else
 			{
-				let vector: vec4;
-				if (texture.type === TextureType.Vec3)
+				let colour: vec4;
+				if (isVec3(texture))
 				{
-					let vector_3d = texture.specifier as vec3;
-					vector = vec4.fromValues(vector_3d[0], vector_3d[1], vector_3d[2], 1);
+					colour = vec4.fromValues(texture[0], texture[1], texture[2], 1);
+				}
+				else if (isVec4(texture))
+				{
+					colour = texture;
 				}
 				else
 				{
-					vector = texture.specifier as vec4;
+					throw new Error("Unknown texture type");
 				}
-				
-				vec4.multiply(vector, vector, vec4.fromValues(255, 255, 255, 255));
-				
-				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(vector));
+
+				vec4.multiply(colour, colour, vec4.fromValues(255, 255, 255, 255));
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(colour));
 			}
 
 			this._textures.set(texture_hash, gl_texture);

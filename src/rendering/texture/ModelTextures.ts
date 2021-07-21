@@ -1,6 +1,6 @@
 import {vec3} from "gl-matrix";
 
-import Texture, {TextureType} from "./Texture";
+import Texture from "./Texture";
 
 
 class ModelTextures
@@ -8,7 +8,7 @@ class ModelTextures
 	colour: Texture;
 	normal: Texture;
 
-	constructor(colour: Texture = new Texture(vec3.create()), normal: Texture = new Texture(vec3.fromValues(0.5, 0.5, 0.5)))
+	constructor(colour: Texture = vec3.create(), normal: Texture = vec3.fromValues(0.5, 0.5, 0.5))
 	{
 		this.colour = colour;
 		this.normal = normal;

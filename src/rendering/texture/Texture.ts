@@ -1,75 +1,41 @@
 import {vec3, vec4} from "gl-matrix";
 
 
-enum TextureType
+type Texture = string | vec3 | vec4;
+
+function isURL(texture: Texture) : texture is string
 {
-	URL,
-	Vec3,
-	Vec4
+	return (texture as string).search !== undefined;
 }
 
-type TextureSpecifier = string | vec3 | vec4;
-
-interface TextureSpecifierMap
+function isVec3(texture: Texture) : texture is vec3
 {
-	URL: string;
-	Vec3: vec3;
-	Vec4: vec4;
+	return !isURL(texture) && (texture as vec3)[3] === undefined;
 }
 
-function isString(specifier: TextureSpecifier) : specifier is string
+function isVec4(texture: Texture) : texture is vec4
 {
-	return (specifier as string).search !== undefined;
+	return !isURL(texture) && (texture as vec4)[3] !== undefined;
 }
 
-function isVec3(specifier: TextureSpecifier) : specifier is vec3
+function hashTexture(texture: Texture): string
 {
-	return !isString(specifier) && (specifier as vec3)[3] === undefined;
-}
-
-function isVec4(specifier: TextureSpecifier) : specifier is vec4
-{
-	return !isString(specifier) && (specifier as vec4)[3] !== undefined;
-}
-
-function getTextureType(specifier: TextureSpecifier)
-{
-	if (isString(specifier))
+	if (isURL(texture))
 	{
-		return TextureType.URL;
+		return "0" + texture;
 	}
-	else if (isVec3(specifier))
+	else if (isVec3(texture))
 	{
-		return TextureType.Vec3;
+		return "1" + texture.toString();
 	}
-	else if (isVec4(specifier))
+	else if (isVec4(texture))
 	{
-		return TextureType.Vec4;
+		return "2" + texture.toString();
 	}
 	else
 	{
-		throw new Error("Unknown texture specifier type");
+		throw new Error("Unknown texture type");
 	}
 }
 
-class Texture
-{
-	specifier: TextureSpecifier;
-
-	constructor(specifier: TextureSpecifier)
-	{
-		this.specifier = specifier;
-	}
-
-	hash(): string
-	{
-		return this.type.toString() + this.specifier.toString();
-	}
-
-	get type(): TextureType
-	{
-		return getTextureType(this.specifier);
-	}
-};
-
-export {Texture as default, TextureType};
+export {Texture as default, hashTexture, isURL, isVec3, isVec4};
