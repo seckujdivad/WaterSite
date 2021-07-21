@@ -6,6 +6,7 @@ import Camera from "../rendering/Camera";
 import keyMonitor from "../KeyMonitor";
 import {applyRotation} from "../vectorutils";
 
+
 interface IProps
 {
 	camera: Camera;
@@ -54,13 +55,20 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 			let div_dimensions = vec2.fromValues(this._div_ref.current.clientWidth, this._div_ref.current.clientHeight);
 			if (div_dimensions[0] > 0 && div_dimensions[1] > 0)
 			{
-				let aspect_ratio = div_dimensions[0] / div_dimensions[1];
-
 				let move_pixels = vec2.fromValues(event.movementX, event.movementY);
-				let look_fraction = vec2.div(vec2.create(), move_pixels, div_dimensions);
+				if (move_pixels[0] !== 0 || move_pixels[1] !== 0)
+				{
+					let aspect_ratio = div_dimensions[0] / div_dimensions[1];
+					let look_fraction = vec2.div(vec2.create(), move_pixels, div_dimensions);
 
-				this.props.camera.rotation[1] -= this.props.lookSpeed * look_fraction[0] * this.props.camera.vfov * aspect_ratio;
-				this.props.camera.rotation[0] -= this.props.lookSpeed * look_fraction[1] * this.props.camera.vfov;
+					this.props.camera.rotation[1] -= this.props.lookSpeed * look_fraction[0] * this.props.camera.vfov * aspect_ratio;
+					this.props.camera.rotation[0] -= this.props.lookSpeed * look_fraction[1] * this.props.camera.vfov;
+
+					if (this.props.onCameraChanged !== undefined)
+					{
+						this.props.onCameraChanged(this.props.camera);
+					}
+				}
 			}
 		}
 	}
@@ -150,7 +158,6 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 				{
 					vec3.scale(translation, translation, this.props.moveSpeed);
 					vec3.transformMat4(translation, translation, applyRotation(mat4.create(), this.props.camera.rotation));
-
 					vec3.add(this.props.camera.position, this.props.camera.position, translation);
 
 					if (this.props.onCameraChanged !== undefined)
