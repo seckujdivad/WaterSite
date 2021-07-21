@@ -132,7 +132,7 @@ class App extends React.Component<IProps, IState>
 			</div>
 		</div>;
 		
-		let selected_model_index = undefined;
+		let selected_model_index = -1;
 		let model_options = [<option key={-1} value={-1} style={{display: "none"}}>No model selected</option>];
 		for (let i = 0; i < this.state.models.length; i++)
 		{
