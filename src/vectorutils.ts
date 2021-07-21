@@ -63,12 +63,48 @@ function vec4To3(vec: vec4)
 	return vec3.fromValues(vec[0], vec[1], vec[2]);
 }
 
-function applyRotation(out: mat4, rotation: vec3, inverse: boolean = false): mat4
+function applyRotation(apply_to: mat4, rotation: vec3, inverse: boolean = false): mat4
 {
-	mat4.rotateX(out, out, inverse ? 0 - rotation[0] : rotation[0]);
-	mat4.rotateY(out, out, inverse ? 0 - rotation[1] : rotation[1]);
-	mat4.rotateZ(out, out, inverse ? 0 - rotation[2] : rotation[2]);
-	return out;
+	mat4.rotateX(apply_to, apply_to, inverse ? 0 - rotation[0] : rotation[0]);
+	mat4.rotateY(apply_to, apply_to, inverse ? 0 - rotation[1] : rotation[1]);
+	mat4.rotateZ(apply_to, apply_to, inverse ? 0 - rotation[2] : rotation[2]);
+	return apply_to;
+}
+
+function vecMod<vec = vec4 | vec3 | vec2>(apply_to: vec, rhs: vec): vec
+{
+	apply_to[0] = apply_to[0] % rhs[0];
+	apply_to[1] = apply_to[1] % rhs[1];
+
+	if (2 in apply_to)
+	{
+		apply_to[2] = apply_to[2] % rhs[2];
+	}
+
+	if (3 in apply_to)
+	{
+		apply_to[3] = apply_to[3] % rhs[3];
+	}
+
+	return apply_to;
+}
+
+function vecModScalar<vec = vec4 | vec3 | vec2>(apply_to: vec, rhs: number): vec
+{
+	apply_to[0] = apply_to[0] % rhs;
+	apply_to[1] = apply_to[1] % rhs;
+
+	if (2 in apply_to)
+	{
+		apply_to[2] = apply_to[2] % rhs;
+	}
+
+	if (3 in apply_to)
+	{
+		apply_to[3] = apply_to[3] % rhs;
+	}
+
+	return apply_to;
 }
 
 export {
@@ -76,5 +112,6 @@ export {
 	arrayToVec4, arrayToVec3, arrayToVec2,
 	vecToString,
 	vec4To3, vec3To4,
-	applyRotation
+	applyRotation,
+	vecMod, vecModScalar
 };
