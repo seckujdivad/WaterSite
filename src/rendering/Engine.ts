@@ -27,7 +27,7 @@ function forEachWebGLCall(function_name: string, args: Array<any>)
 
 async function queryShaders()
 {
-	let [vertex_shader_req, fragment_shader_req] = await Promise.all([fetch("water.vert"), fetch("water.frag")]);
+	let [vertex_shader_req, fragment_shader_req] = await Promise.all([fetch("normal.vert"), fetch("normal.frag")]);
 	let [vertex_shader, fragment_shader] = await Promise.all([vertex_shader_req.text(), fragment_shader_req.text()]);
 	return {vertex: vertex_shader, fragment: fragment_shader};
 }
