@@ -1,8 +1,8 @@
 {
 	"name": "watersite",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"version": "0.1.0",
+	"description": "Simple WebGL renderer using TypeScript",
+	"main": "src/index.tsx",
 	"private": true,
 	"scripts": {
 		"start": "webpack serve --mode development",
