@@ -1,7 +1,7 @@
 import React, {RefObject} from "react";
 import memoizeOne from "memoize-one";
 
-import styles from "./Renderer.module.css";
+import styles from "./Viewport.module.css";
 
 import Model from "../rendering/model/Model";
 import Engine from "../rendering/Engine";
@@ -22,7 +22,7 @@ interface IState
 
 let getEngine = memoizeOne(context => new Engine(context));
 
-class Renderer extends React.Component<IProps, IState>
+class Viewport extends React.Component<IProps, IState>
 {
 	constructor(props: IProps)
 	{
@@ -53,4 +53,4 @@ class Renderer extends React.Component<IProps, IState>
 	}
 };
 
-export default Renderer;
+export default Viewport;
