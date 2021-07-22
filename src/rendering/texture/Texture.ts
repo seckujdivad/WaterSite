@@ -5,7 +5,7 @@ type Texture = string | vec3 | vec4;
 
 function isURL(texture: Texture) : texture is string
 {
-	return (texture as string).search !== undefined;
+	return typeof texture === "string";
 }
 
 function isVec3(texture: Texture) : texture is vec3
