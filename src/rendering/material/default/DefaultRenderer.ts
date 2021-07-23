@@ -1,7 +1,7 @@
 import {mat4} from "gl-matrix";
 
 import IRenderer from "../IRenderer";
-import DefaultMaterial from "../model/material/DefaultMaterial";
+import DefaultMaterial from "./DefaultMaterial";
 import ShaderProgram from "../ShaderProgram";
 import RendererJob from "../RendererJob";
 

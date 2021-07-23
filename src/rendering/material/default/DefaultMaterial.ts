@@ -1,9 +1,9 @@
 import {vec3} from "gl-matrix";
 
-import IMaterial from "../../IMaterial";
-import MaterialIdentifier from "../../MaterialIdentifier";
+import IMaterial from "../IMaterial";
+import MaterialIdentifier from "../MaterialIdentifier";
 import Texture from "../../texture/Texture";
-import DefaultRenderer from "../../renderer/DefaultRenderer";
+import DefaultRenderer from "./DefaultRenderer";
 
 
 class DefaultMaterial implements IMaterial

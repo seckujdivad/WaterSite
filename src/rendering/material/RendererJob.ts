@@ -1,7 +1,7 @@
-import Camera from "./Camera";
-import Model from "./model/Model";
-import GLModel from "./model/GLModel";
-import TextureManager from "./texture/TextureManager";
+import Camera from "../Camera";
+import Model from "../model/Model";
+import GLModel from "../model/GLModel";
+import TextureManager from "../texture/TextureManager";
 import IMaterial from "./IMaterial";
 
 

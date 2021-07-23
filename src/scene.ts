@@ -3,8 +3,8 @@ import {vec3} from "gl-matrix";
 import Model from "./rendering/model/Model";
 import {loadPLYModelFromURL} from "./rendering/model/PlyLoader";
 import Camera from "./rendering/Camera";
-import IMaterial from "./rendering/IMaterial";
-import DefaultMaterial from "./rendering/model/material/DefaultMaterial";
+import IMaterial from "./rendering/material/IMaterial";
+import DefaultMaterial from "./rendering/material/default/DefaultMaterial";
 
 
 function getCamera()

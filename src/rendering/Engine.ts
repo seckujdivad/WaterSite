@@ -5,10 +5,10 @@ import GLModel from "./model/GLModel";
 import {IModel} from "./model/Model";
 import Camera from "./Camera";
 import TextureManager from "./texture/TextureManager";
-import IMaterial from "./IMaterial";
-import MaterialIdentifier from "./MaterialIdentifier";
-import IRenderer from "./IRenderer";
-import RendererJob from "./RendererJob";
+import IMaterial from "./material/IMaterial";
+import MaterialIdentifier from "./material/MaterialIdentifier";
+import IRenderer from "./material/IRenderer";
+import RendererJob from "./material/RendererJob";
 
 
 function WebGLErrorCallback(error: number, function_name: string)

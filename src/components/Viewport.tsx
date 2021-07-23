@@ -6,7 +6,7 @@ import styles from "./Viewport.module.css";
 import Model from "../rendering/model/Model";
 import Engine from "../rendering/Engine";
 import Camera from "../rendering/Camera";
-import IMaterial from "../rendering/IMaterial";
+import IMaterial from "../rendering/material/IMaterial";
 
 
 interface IProps

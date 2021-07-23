@@ -1,7 +1,7 @@
 import {vec3, vec2} from "gl-matrix";
 
 import Model, {Vertex, Face} from "./Model";
-import IMaterial from "./../IMaterial";
+import IMaterial from "./../material/IMaterial";
 
 
 enum ModelPresets

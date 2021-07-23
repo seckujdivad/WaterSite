@@ -1,5 +1,5 @@
 import {vec3, vec2, mat4} from "gl-matrix";
-import IMaterial from "../IMaterial";
+import IMaterial from "../material/IMaterial";
 
 
 class Model<DerivedMaterial extends IMaterial>

@@ -1,6 +1,6 @@
 import {vec3, vec2} from "gl-matrix";
 import Model, {Face, Vertex} from "./Model";
-import IMaterial from "../IMaterial";
+import IMaterial from "../material/IMaterial";
 
 enum PlyType
 {
