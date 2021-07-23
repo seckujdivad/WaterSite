@@ -1,5 +1,7 @@
-import Model, {Vertex, Face} from "./Model";
 import {vec3, vec2} from "gl-matrix";
+
+import Model, {Vertex, Face} from "./Model";
+import IMaterial from "./../IMaterial";
 
 
 enum ModelPresets
@@ -7,7 +9,7 @@ enum ModelPresets
 	FlatPlane
 };
 
-function modelFromPreset(model: Model, preset: ModelPresets): Model
+function modelFromPreset<DerivedMaterial extends IMaterial>(model: Model<DerivedMaterial>, preset: ModelPresets): Model<DerivedMaterial>
 {
 	if (preset === ModelPresets.FlatPlane)
 	{

@@ -1,5 +1,6 @@
 import {vec3, vec2} from "gl-matrix";
 import Model, {Face, Vertex} from "./Model";
+import IMaterial from "../IMaterial";
 
 enum PlyType
 {
@@ -33,7 +34,7 @@ class Element
 	}
 };
 
-function loadPLYModel(model: Model, ply_contents: string): Model //this function is only written to work with Blender's PLY ouptut
+function loadPLYModel<DerivedMaterial extends IMaterial>(model: Model<DerivedMaterial>, ply_contents: string): Model<DerivedMaterial> //this function is only written to work with Blender's PLY ouptut
 {
 	let ply_lines = ply_contents.replaceAll("\r", "").split("\n");
 	let current_line_index = 0;
@@ -174,7 +175,7 @@ function loadPLYModel(model: Model, ply_contents: string): Model //this function
 	return model;
 }
 
-async function loadPLYModelFromURL(model: Model, url: string)
+async function loadPLYModelFromURL<DerivedMaterial extends IMaterial>(model: Model<DerivedMaterial>, url: string)
 {
 	let ply_request = await fetch(url);
 	let ply_contents = await ply_request.text();

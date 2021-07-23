@@ -8,7 +8,7 @@ import Viewport from "./Viewport";
 import ControllableCamera from "./ControllableCamera";
 
 import {vec3ToArray, arrayToVec3, vecToString} from "../vectorutils";
-import Model from "../rendering/model/Model";
+import {IModel} from "../rendering/model/Model";
 import Camera from "../rendering/Camera";
 import {getModels, getCamera} from "../scene";
 
@@ -26,8 +26,8 @@ interface IState
 
 	camera: Camera;
 
-	models: Array<Model>;
-	selected_model: Model;
+	models: Array<IModel>;
+	selected_model: IModel;
 };
 
 class App extends React.Component<IProps, IState>

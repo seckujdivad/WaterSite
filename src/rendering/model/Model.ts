@@ -1,8 +1,8 @@
 import {vec3, vec2, mat4} from "gl-matrix";
-import ModelTextures from "../texture/ModelTextures";
+import IMaterial from "../IMaterial";
 
 
-class Model
+class Model<DerivedMaterial extends IMaterial>
 {
 	faces: Array<Face>;
 
@@ -10,15 +10,15 @@ class Model
 	rotation: vec3;
 	scale: vec3;
 
-	textures: ModelTextures;
+	material: DerivedMaterial;
 
-	constructor(position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [], textures: ModelTextures = new ModelTextures())
+	constructor(material: DerivedMaterial, position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [])
 	{
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
 
-		this.textures = textures;
+		this.material = material;
 
 		this.faces = faces;
 	}
@@ -146,4 +146,6 @@ class Vertex
 	}
 };
 
-export {Model as default, Face, Vertex};
+type IModel = Model<IMaterial>;
+
+export {Model as default, Face, Vertex, IModel};

@@ -1,12 +1,14 @@
-import {mat4} from "gl-matrix";
 import WebGLDebugUtils from "webgl-debug";
 
 import narrowCanvas from "./HTMLCanvasTypes";
-import ShaderProgram from "./ShaderProgram";
 import GLModel from "./model/GLModel";
-import Model from "./model/Model";
+import {IModel} from "./model/Model";
 import Camera from "./Camera";
 import TextureManager from "./texture/TextureManager";
+import IMaterial from "./IMaterial";
+import MaterialIdentifier from "./MaterialIdentifier";
+import IRenderer from "./IRenderer";
+import RendererJob from "./RendererJob";
 
 
 function WebGLErrorCallback(error: number, function_name: string)
@@ -25,18 +27,11 @@ function forEachWebGLCall(function_name: string, args: Array<any>)
 	}
 }
 
-async function queryShaders()
-{
-	let shader_promises = [fetch("normal.vert"), fetch("normal.frag")].map(promise => promise.then(response => response.text()));
-	let [vertex_shader, fragment_shader] = await Promise.all(shader_promises);
-	return {vertex: vertex_shader, fragment: fragment_shader};
-}
-
 class Engine
 {
 	_context: WebGL2RenderingContextStrict;
 
-	_shader_program: ShaderProgram;
+	_renderers: Map<MaterialIdentifier, IRenderer<IMaterial>>;
 	_texture_manager: TextureManager;
 
 	_gl_models: Array<GLModel>;
@@ -50,21 +45,17 @@ class Engine
 		}
 
 		this._texture_manager = new TextureManager(this._context);
-
 		this._gl_models = [];
+		this._renderers = new Map();
 
 		const gl = this._context;
 		gl.enable(gl.CULL_FACE);
 		gl.cullFace(gl.BACK);
 		
 		gl.enable(gl.DEPTH_TEST);
-
-		this._shader_program = null;
-
-		this.loadShaderProgram();
 	}
 
-	render(models: Array<Model>, camera: Camera)
+	render(models: Array<IModel>, camera: Camera)
 	{
 		const gl = this._context;
 
@@ -95,51 +86,44 @@ class Engine
 				this._gl_models.push(new GLModel(this._context, models[i].toArray()));
 			}
 		}
-		
-		if (this._shader_program !== null)
+
+		gl.clearColor(1, 1, 1, 1);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+		//process renderers
+		let jobs: Map<MaterialIdentifier, RendererJob<IMaterial>> = new Map();
+		for (let i = 0; i < models.length; i++)
 		{
-			this._shader_program.use();
+			let model = models[i];
+			let glmodel = this._gl_models[i];
 
-			//set up uniforms
-			let perspective = mat4.create();
-			mat4.perspective(perspective, camera.vfov, gl.canvas.width / gl.canvas.height, 0.1, 100);
-			gl.uniformMatrix4fv(this._shader_program.getUniform("perspective"), false, perspective);
-
-			gl.uniformMatrix4fv(this._shader_program.getUniform("transformationCamera"), false, camera.getTransformation());
-			
-			//perform render
-			gl.clearColor(1, 1, 1, 1);
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			
-			for (let i = 0; i < models.length; i++)
+			let material_identifier = model.material.getMaterialIdentifier();
+			if (!jobs.has(material_identifier))
 			{
-				const model = models[i];
-				const glmodel = this._gl_models[i];
+				jobs.set(material_identifier, new RendererJob(camera, [], this._texture_manager));
+			}
 
-				this._shader_program.addTexture("textureColour", this._texture_manager.getTexture(model.textures.colour));
-				this._shader_program.addTexture("textureNormal", this._texture_manager.getTexture(model.textures.normal));
+			let job = jobs.get(material_identifier);
+			job.models.push([model, glmodel]);
+		}
 
-				glmodel.bind();
+		for (let [material_identifier, job] of jobs)
+		{
+			if (job.models.length > 0)
+			{
+				if (!this._renderers.has(material_identifier))
+				{
+					this._renderers.set(material_identifier, job.models[0][0].material.generateRenderer(this._context));
+				}
 
-				gl.uniformMatrix4fv(this._shader_program.getUniform("transformationModel"), false, model.getTransformation());
-				gl.drawArrays(gl.TRIANGLES, 0, model.getNumVertices());
+				let renderer = this._renderers.get(material_identifier);
+				renderer.render(job);
+			}
+			else
+			{
+				throw new Error("Each job should have at least one model associated");
 			}
 		}
-	}
-
-	async loadShaderProgram()
-	{
-		let shaders = await queryShaders();
-		this._shader_program = new ShaderProgram(this._context, shaders.vertex, shaders.fragment);
-
-		this._shader_program.addUniform("transformationCamera");
-		this._shader_program.addUniform("transformationModel");
-		this._shader_program.addUniform("perspective");
-	}
-
-	getContext()
-	{
-		return this._context;
 	}
 };
 
