@@ -1,6 +1,6 @@
-import {vec3, vec4} from "gl-matrix";
+import {vec4} from "gl-matrix";
 
-import Texture, {isURL, isVec3, isVec4, hashTexture} from "./Texture";
+import Texture, {isURL, isVec3, isVec4, hashTexture, TextureType} from "./Texture";
 
 
 class TextureManager
@@ -26,50 +26,93 @@ class TextureManager
 		{
 			const gl = this._context;
 			const gl_texture = gl.createTexture();
-			gl.bindTexture(gl.TEXTURE_2D, gl_texture);
 			
-			if (isURL(texture))
+			let texture_enum: WebGLRenderingContextStrict.TextureTarget = gl.TEXTURE_2D;
+			if (texture.type === TextureType.Texture2D)
+			{
+				texture_enum = gl.TEXTURE_2D;
+			}
+			else if (texture.type === TextureType.TextureCubemap)
+			{
+				texture_enum = gl.TEXTURE_CUBE_MAP;
+			}
+			else
+			{
+				throw new Error("Unrecognised TextureType");
+			}
+
+			gl.bindTexture(texture_enum, gl_texture);
+
+			gl.texParameteri(texture_enum, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(texture_enum, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(texture_enum, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+
+			gl.texParameteri(texture_enum, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+			gl.texParameteri(texture_enum, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+			
+			if (isURL(texture.data))
 			{
 				//default initialise to 1x1 black texture
-				const pixel = new Uint8Array([0, 0, 0, 255]);
-				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+				setWebGLTextureToColour(gl, gl_texture, texture.type, vec4.fromValues(0, 0, 0, 1));
 
 				//request the full image from the server asynchronously
 				const image = new Image();
 				image.onload = function ()
 				{
-					gl.bindTexture(gl.TEXTURE_2D, gl_texture);
-					gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+					gl.bindTexture(texture_enum, gl_texture);
+					if (texture.type === TextureType.Texture2D)
+					{
+						gl.texImage2D(texture_enum as WebGLRenderingContextStrict.TexImage2DTarget, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+					}
+					else if (texture.type === TextureType.TextureCubemap)
+					{
+						//TODO: load texture
+						for (let i = 0; i < 6; i++)
+						{
+							gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+						}
+					}
+					else
+					{
+						throw new Error("Unrecognised TextureType");
+					}
 				};
-				image.src = texture;
+				image.src = texture.data;
 			}
 			else
 			{
 				let colour: vec4;
-				if (isVec3(texture))
+				if (isVec3(texture.data))
 				{
-					colour = vec4.fromValues(texture[0], texture[1], texture[2], 1);
+					colour = vec4.fromValues(texture.data[0], texture.data[1], texture.data[2], 1);
 				}
-				else if (isVec4(texture))
+				else if (isVec4(texture.data))
 				{
-					colour = texture;
+					colour = texture.data;
 				}
 				else
 				{
 					throw new Error("Unknown texture type");
 				}
 
-				vec4.multiply(colour, colour, vec4.fromValues(255, 255, 255, 255));
-				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(colour));
+				setWebGLTextureToColour(gl, gl_texture, texture.type, colour);
 			}
 
 			this._textures.set(texture_hash, gl_texture);
 			return gl_texture;
 		}
+	}
+}
+
+function setWebGLTextureToColour(context: WebGL2RenderingContextStrict, texture: WebGLTexture, texture_type: TextureType, colour: vec4): void
+{
+	const gl = context;
+
+	let pixel = new Uint8Array(vec4.multiply(vec4.create(), colour, vec4.fromValues(255, 255, 255, 255)));
+	if (texture_type === TextureType.Texture2D)
+	{
+		gl.bindTexture(gl.TEXTURE_2D, texture)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 	}
 }
 

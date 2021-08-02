@@ -5,6 +5,7 @@ import {loadPLYModelFromURL} from "./rendering/model/PlyLoader";
 import Camera from "./rendering/Camera";
 import IMaterial from "./rendering/material/IMaterial";
 import DefaultMaterial from "./rendering/material/default/DefaultMaterial";
+import {TextureType} from "./rendering/texture/Texture";
 
 
 function getCamera()
@@ -15,8 +16,8 @@ function getCamera()
 function getModels(modelLoadedCallback?: (modelLoaded: Model<IMaterial>) => void)
 {
 	let cube = new Model(new DefaultMaterial());
-	cube.material.colour = "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg";
-	cube.material.normal = "./SeaWavesB_N.jpg";
+	cube.material.colour = {type: TextureType.Texture2D, data: "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg"};
+	cube.material.normal = {type: TextureType.Texture2D, data: "./SeaWavesB_N.jpg"};
 	loadPLYModelFromURL(cube, "./cube.ply").then(modelLoadedCallback);
 
 	return [cube];

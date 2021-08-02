@@ -1,36 +1,49 @@
 import {vec3, vec4} from "gl-matrix";
 
 
-type Texture = string | vec3 | vec4;
-
-function isURL(texture: Texture) : texture is string
+//if the number of enumerators ever gets to double digits, hashTextureType will need to be rewritten
+enum TextureType
 {
-	return typeof texture === "string";
+	Texture2D,
+	TextureCubemap
 }
 
-function isVec3(texture: Texture) : texture is vec3
+type TextureData = string | vec3 | vec4;
+
+class Texture
 {
-	return !isURL(texture) && (texture as vec3)[3] === undefined;
+	type: TextureType;
+	data: TextureData;
+};
+
+function isURL(texture_data: TextureData) : texture_data is string
+{
+	return typeof texture_data === "string";
 }
 
-function isVec4(texture: Texture) : texture is vec4
+function isVec3(texture_data: TextureData) : texture_data is vec3
 {
-	return !isURL(texture) && (texture as vec4)[3] !== undefined;
+	return !isURL(texture_data) && (texture_data as vec3)[3] === undefined;
 }
 
-function hashTexture(texture: Texture): string
+function isVec4(texture_data: TextureData) : texture_data is vec4
 {
-	if (isURL(texture))
+	return !isURL(texture_data) && (texture_data as vec4)[3] !== undefined;
+}
+
+function hashTextureData(texture_data: TextureData): string
+{
+	if (isURL(texture_data))
 	{
-		return "0" + texture;
+		return "0" + texture_data;
 	}
-	else if (isVec3(texture))
+	else if (isVec3(texture_data))
 	{
-		return "1" + texture.toString();
+		return "1" + texture_data.toString();
 	}
-	else if (isVec4(texture))
+	else if (isVec4(texture_data))
 	{
-		return "2" + texture.toString();
+		return "2" + texture_data.toString();
 	}
 	else
 	{
@@ -38,4 +51,14 @@ function hashTexture(texture: Texture): string
 	}
 }
 
-export {Texture as default, hashTexture, isURL, isVec3, isVec4};
+function hashTextureType(texture_type: TextureType): string
+{
+	return texture_type.toString();
+}
+
+function hashTexture(texture: Texture): string
+{
+	return hashTextureType(texture.type) + hashTextureData(texture.data);
+}
+
+export {Texture as default, hashTexture, isURL, isVec3, isVec4, TextureType};
