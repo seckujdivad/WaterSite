@@ -1,6 +1,15 @@
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
+const devBuild = process.env.NODE_ENV !== 'production'
+
+const typescriptLoader = {
+	loader: "ts-loader",
+	options: {
+		transpileOnly: true
+	}
+};
+
 module.exports = {
 	entry: "./src/index.tsx",
 	output: {
@@ -54,37 +63,37 @@ module.exports = {
 			{
 				test: /(?<!\.d)\.ts$/,
 				include: path.resolve(__dirname, "src"),
-				use: [
+				use: devBuild ?
+				[
+					typescriptLoader
+				]
+				:
+				[
 					{
 						loader: "babel-loader",
 						options: {
 							presets: ["@babel/preset-env"]
 						}
 					},
-					{
-						loader: "ts-loader",
-						options: {
-							transpileOnly: true
-						}
-					}
+					typescriptLoader
 				]
 			},
 			{
 				test: /\.tsx$/,
 				include: path.resolve(__dirname, "src"),
-				use: [
+				use: devBuild ?
+				[
+					typescriptLoader
+				]
+				:
+				[
 					{
 						loader: "babel-loader",
 						options: {
 							presets: ["@babel/preset-react"]
 						}
 					},
-					{
-						loader: "ts-loader",
-						options: {
-							transpileOnly: true
-						}
-					}
+					typescriptLoader
 				]
 			}
 		]
@@ -92,7 +101,7 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname, "public")
 	},
-	devtool: "source-map",
+	devtool: devBuild ? "eval-cheap-module-source-map" : "source-map",
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx']
 	},
