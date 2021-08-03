@@ -15,10 +15,10 @@ function modelFromPreset<DerivedMaterial extends IMaterial>(model: Model<Derived
 	{
 		model.faces.push(new Face(vec3.fromValues(0, 0, 1),
 			[
-				new Vertex(vec3.fromValues(-0.5, -0.5, 0), vec2.fromValues(0, 0)),
-				new Vertex(vec3.fromValues(0.5, -0.5, 0), vec2.fromValues(1, 0)),
-				new Vertex(vec3.fromValues(0.5, 0.5, 0), vec2.fromValues(1, 1)),
-				new Vertex(vec3.fromValues(-0.5, 0.5, 0), vec2.fromValues(0, 1))
+				new Vertex(vec3.fromValues(-1, -1, 0), vec2.fromValues(0, 0)),
+				new Vertex(vec3.fromValues(1, -1, 0), vec2.fromValues(1, 0)),
+				new Vertex(vec3.fromValues(1, 1, 0), vec2.fromValues(1, 1)),
+				new Vertex(vec3.fromValues(-1, 1, 0), vec2.fromValues(0, 1))
 			]));
 		return model;
 	}
