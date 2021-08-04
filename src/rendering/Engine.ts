@@ -54,6 +54,8 @@ class Engine
 		
 		gl.enable(gl.DEPTH_TEST);
 		gl.depthFunc(gl.LEQUAL);
+
+		gl.disable(gl.BLEND);
 	}
 
 	render(models: Array<IModel>, camera: Camera)
