@@ -2,7 +2,7 @@ import {mat4} from "gl-matrix";
 
 import IRenderer from "../IRenderer";
 import DefaultMaterial from "./DefaultMaterial";
-import ShaderProgram from "../ShaderProgram";
+import ShaderProgram, {loadShaderProgram} from "../ShaderProgram";
 import RendererJob from "../RendererJob";
 
 
@@ -52,10 +52,7 @@ class DefaultRenderer implements IRenderer<DefaultMaterial>
 
 	async loadShaderProgram()
 	{
-		let shader_promises = [fetch("normal.vert"), fetch("normal.frag")].map(promise => promise.then(response => response.text()));
-		let [vertex_shader, fragment_shader] = await Promise.all(shader_promises);
-
-		this._shader_program = new ShaderProgram(this._context, vertex_shader, fragment_shader);
+		this._shader_program = await loadShaderProgram(this._context, "./normal.vert", "./normal.frag");
 
 		this._shader_program.addUniform("transformationCamera");
 		this._shader_program.addUniform("transformationModel");
