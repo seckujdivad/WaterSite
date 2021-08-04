@@ -25,6 +25,7 @@ function getModels(modelLoadedCallback: (modelLoaded: Model<IMaterial>) => void 
 	let skybox = new Model(new SkyboxMaterial({type: TextureType.TextureCubemap, data: "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg"})); //./Daylight_Box_UV.png
 	loadPLYModelFromURL(skybox, "./cube.ply").then(modelLoadedCallback);
 	skybox.identifier = "Skybox";
+	skybox.flip_winding = true;
 
 	return [cube, skybox];
 }

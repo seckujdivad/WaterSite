@@ -14,7 +14,9 @@ class Model<DerivedMaterial extends IMaterial>
 
 	identifier: string;
 
-	constructor(material: DerivedMaterial, position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [], identifier = "")
+	flip_winding: boolean;
+
+	constructor(material: DerivedMaterial, position = vec3.fromValues(0, 0, 0), rotation = vec3.fromValues(0, 0, 0), scale = vec3.fromValues(1, 1, 1), faces: Array<Face> = [], flip_winding = false, identifier = "")
 	{
 		this.position = position;
 		this.rotation = rotation;
@@ -23,13 +25,14 @@ class Model<DerivedMaterial extends IMaterial>
 		this.material = material;
 
 		this.faces = faces;
+		this.flip_winding = flip_winding;
 
 		this.identifier = identifier;
 	}
 
 	toArray(): Array<number>
 	{
-		let nums_from_each_triangle = this.faces.map(triangle => triangle.toArray());
+		let nums_from_each_triangle = this.faces.map(triangle => triangle.toArray(this.flip_winding));
 		return [].concat(...nums_from_each_triangle);
 	}
 
@@ -76,16 +79,25 @@ class Face
 		this.normal = normal;
 	}
 
-	toArray(): Array<number>
+	toArray(flip_winding: boolean): Array<number>
 	{
 		let tangent = this.tangent;
 
 		let vertices: Array<Vertex> = [];
 		for (let i = 2; i < this.vertices.length; i++)
 		{
-			vertices.push(this.vertices[0]);
-			vertices.push(this.vertices[i - 1]);
-			vertices.push(this.vertices[i]);
+			if (flip_winding)
+			{
+				vertices.push(this.vertices[i]);
+				vertices.push(this.vertices[i - 1]);
+				vertices.push(this.vertices[0]);
+			}
+			else
+			{
+				vertices.push(this.vertices[0]);
+				vertices.push(this.vertices[i - 1]);
+				vertices.push(this.vertices[i]);
+			}
 		}
 
 		let nums_from_each_vertex = vertices.map(
