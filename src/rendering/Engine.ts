@@ -53,6 +53,7 @@ class Engine
 		gl.cullFace(gl.BACK);
 		
 		gl.enable(gl.DEPTH_TEST);
+		gl.depthFunc(gl.LEQUAL);
 	}
 
 	render(models: Array<IModel>, camera: Camera)
