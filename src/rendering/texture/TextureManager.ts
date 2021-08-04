@@ -7,7 +7,7 @@ class TextureManager
 {
 	_context: WebGL2RenderingContextStrict;
 
-	_textures: Map<string, WebGLTexture>;
+	_textures: Map<string, [WebGLRenderingContextStrict.TextureTarget, WebGLTexture]>;
 
 	constructor(context: WebGL2RenderingContextStrict)
 	{
@@ -15,7 +15,7 @@ class TextureManager
 		this._textures = new Map();
 	}
 
-	getTexture(texture: Texture): WebGLTexture
+	getTexture(texture: Texture): [WebGLRenderingContextStrict.TextureTarget, WebGLTexture]
 	{
 		let texture_hash = hashTexture(texture);
 		if (this._textures.has(texture_hash))
@@ -62,14 +62,22 @@ class TextureManager
 					gl.bindTexture(texture_enum, gl_texture);
 					if (texture.type === TextureType.Texture2D)
 					{
-						gl.texImage2D(texture_enum as WebGLRenderingContextStrict.TexImage2DTarget, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+						gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 					}
 					else if (texture.type === TextureType.TextureCubemap)
 					{
-						//TODO: load texture
-						for (let i = 0; i < 6; i++)
+						let targets = [
+							gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+							gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+							gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+							gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+							gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+							gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+						];
+
+						for (const target of targets)
 						{
-							gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+							gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 						}
 					}
 					else
@@ -98,8 +106,9 @@ class TextureManager
 				setWebGLTextureToColour(gl, gl_texture, texture.type, colour);
 			}
 
-			this._textures.set(texture_hash, gl_texture);
-			return gl_texture;
+			let gl_texture_data: [WebGLRenderingContextStrict.TextureTarget, WebGLTexture] = [texture_enum, gl_texture];
+			this._textures.set(texture_hash, gl_texture_data);
+			return gl_texture_data;
 		}
 	}
 }
@@ -113,6 +122,14 @@ function setWebGLTextureToColour(context: WebGL2RenderingContextStrict, texture:
 	{
 		gl.bindTexture(gl.TEXTURE_2D, texture)
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+	}
+	else if (texture_type === TextureType.TextureCubemap)
+	{
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+		for (let i = 0; i < 6; i++)
+		{
+			gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i as WebGLRenderingContextStrict.TexImage2DTarget, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+		}
 	}
 }
 

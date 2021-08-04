@@ -5,7 +5,7 @@ class ShaderProgram
 	_obj: WebGLProgram;
 
 	_uniforms: Map<string, WebGLUniformLocation>;
-	_textures: Map<string, WebGLTexture>;
+	_textures: Map<string, [WebGLRenderingContextStrict.TextureTarget, WebGLTexture]>;
 
 	constructor(context: WebGL2RenderingContextStrict, vertex_shader_source: string, fragment_shader_source: string)
 	{
@@ -53,9 +53,9 @@ class ShaderProgram
 		return this._uniforms.get(name);
 	}
 
-	addTexture(name: string, texture: WebGLTexture)
+	addTexture(name: string, [target, texture]: [WebGLRenderingContextStrict.TextureTarget, WebGLTexture])
 	{
-		this._textures.set(name, texture);
+		this._textures.set(name, [target, texture]);
 		this.addUniform(name);
 
 		this.linkTexturesAndUniforms();
@@ -69,12 +69,12 @@ class ShaderProgram
 
 		gl.useProgram(this._obj);
 		let i = 0;
-		for (const [name, texture] of this._textures)
+		for (const [name, [target, texture]] of this._textures)
 		{
 			const uniform: WebGLUniformLocation = this._uniforms.get(name);
 			let texture_unit = gl.TEXTURE0 + i + 1 as WebGLRenderingContextStrict.TextureUnit
 			gl.activeTexture(texture_unit);
-			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.bindTexture(target, texture);
 			gl.uniform1i(uniform, i + 1);
 			i += 1;
 		};
@@ -87,4 +87,12 @@ class ShaderProgram
 	}
 }
 
-export default ShaderProgram;
+async function loadShaderProgram(context: WebGL2RenderingContextStrict, vertex_shader_url: string, fragment_shader_url: string)
+{
+	let shader_promises = [fetch(vertex_shader_url), fetch(fragment_shader_url)].map(promise => promise.then(response => response.text()));
+	let [vertex_shader, fragment_shader] = await Promise.all(shader_promises);
+
+	return new ShaderProgram(context, vertex_shader, fragment_shader);
+}
+
+export {ShaderProgram as default, loadShaderProgram};

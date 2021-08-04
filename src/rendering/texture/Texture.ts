@@ -23,12 +23,12 @@ function isURL(texture_data: TextureData) : texture_data is string
 
 function isVec3(texture_data: TextureData) : texture_data is vec3
 {
-	return !isURL(texture_data) && (texture_data as vec3)[3] === undefined;
+	return Array.isArray(texture_data) && texture_data.length === 3;
 }
 
 function isVec4(texture_data: TextureData) : texture_data is vec4
 {
-	return !isURL(texture_data) && (texture_data as vec4)[3] !== undefined;
+	return Array.isArray(texture_data) && texture_data.length === 4;
 }
 
 function hashTextureData(texture_data: TextureData): string
