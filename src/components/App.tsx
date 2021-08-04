@@ -137,7 +137,14 @@ class App extends React.Component<IProps, IState>
 		for (let i = 0; i < this.state.models.length; i++)
 		{
 			let model = this.state.models[i];
-			model_options.push(<option key={i} value={i}>{model.faces.length + " faces, " + model.getNumVertices() + " vertices @ " + vecToString(model.position, 1)}</option>);
+
+			let label = model.faces.length + " faces, " + model.getNumVertices() + " vertices @ " + vecToString(model.position, 1);
+			if (model.identifier !== "")
+			{
+				label = model.identifier + ": " + label;
+			}
+
+			model_options.push(<option key={i} value={i}>{label}</option>);
 
 			if (model === this.state.selected_model)
 			{

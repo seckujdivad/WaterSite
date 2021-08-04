@@ -12,7 +12,9 @@ class Model<DerivedMaterial extends IMaterial>
 
 	material: DerivedMaterial;
 
-	constructor(material: DerivedMaterial, position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [])
+	identifier: string;
+
+	constructor(material: DerivedMaterial, position: vec3 = vec3.fromValues(0, 0, 0), rotation: vec3 = vec3.fromValues(0, 0, 0), scale: vec3 = vec3.fromValues(1, 1, 1), faces: Array<Face> = [], identifier = "")
 	{
 		this.position = position;
 		this.rotation = rotation;
@@ -21,6 +23,8 @@ class Model<DerivedMaterial extends IMaterial>
 		this.material = material;
 
 		this.faces = faces;
+
+		this.identifier = identifier;
 	}
 
 	toArray(): Array<number>
