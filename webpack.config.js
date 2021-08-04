@@ -1,12 +1,13 @@
 const path = require("path");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-const devBuild = process.env.NODE_ENV !== 'production'
+
+const devBuild = process.argv[process.argv.indexOf("--mode") + 1] !== "production";
 
 const typescriptLoader = {
 	loader: "ts-loader",
 	options: {
-		transpileOnly: true
+		transpileOnly: devBuild
 	}
 };
 
@@ -101,7 +102,7 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname, "public")
 	},
-	devtool: devBuild ? "eval-cheap-module-source-map" : "source-map",
+	devtool: devBuild ? "eval-cheap-module-source-map" : undefined,
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx']
 	},
