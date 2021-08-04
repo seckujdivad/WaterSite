@@ -1,4 +1,4 @@
-import {vec4} from "gl-matrix";
+import {vec4, vec2} from "gl-matrix";
 
 import Texture, {isURL, isVec3, isVec4, hashTexture, TextureType} from "./Texture";
 
@@ -66,18 +66,38 @@ class TextureManager
 					}
 					else if (texture.type === TextureType.TextureCubemap)
 					{
-						let targets = [
-							gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-							gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-							gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-							gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-							gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-							gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+						let targets: Array<[WebGLRenderingContextStrict.TexImage2DTarget, vec2]> = [
+							[gl.TEXTURE_CUBE_MAP_POSITIVE_X, vec2.fromValues(2, 1)],
+							[gl.TEXTURE_CUBE_MAP_NEGATIVE_X, vec2.fromValues(0, 1)],
+							[gl.TEXTURE_CUBE_MAP_POSITIVE_Y, vec2.fromValues(1, 0)],
+							[gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, vec2.fromValues(1, 2)],
+							[gl.TEXTURE_CUBE_MAP_POSITIVE_Z, vec2.fromValues(1, 1)],
+							[gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, vec2.fromValues(3, 1)]
 						];
 
-						for (const target of targets)
+						const canvas = document.createElement("canvas");
+						const canvas_context = canvas.getContext("2d");
+
+						canvas.width = image.width;
+						canvas.height = image.height;
+
+						canvas_context.drawImage(image, 0, 0);
+
+						let scale_factor = vec2.fromValues(image.width / 4, image.height / 3);
+
+						for (const [target, position] of targets)
 						{
-							gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+							let top_left = position;
+							let bottom_right = vec2.add(vec2.create(), top_left, vec2.fromValues(1, 1));
+
+							vec2.multiply(top_left, top_left, scale_factor);
+							vec2.multiply(bottom_right, bottom_right, scale_factor);
+
+							let dimensions = vec2.subtract(vec2.create(), bottom_right, top_left);
+
+							let image_data = canvas_context.getImageData(top_left[0], top_left[1], dimensions[0], dimensions[1]);
+
+							gl.texImage2D(target, 0, gl.RGBA, image_data.width, image_data.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image_data);
 						}
 					}
 					else
