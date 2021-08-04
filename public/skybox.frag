@@ -3,19 +3,13 @@
 precision highp float;
 
 in vec4 vertPosition;
-in vec2 vertUV;
+in vec3 vertSampleVec;
 
 out vec4 frag_out;
 
 uniform samplerCube skyboxTexture;
 
-vec3 PerspDiv(vec4 vec)
-{
-    return vec.xyz / vec.w;
-}
-
 void main()
 {
-    vec3 position = PerspDiv(vertPosition);
-    frag_out = texture(skyboxTexture, position);
+	frag_out = vec4(texture(skyboxTexture, vertSampleVec).rgb, 1.0f);
 }
