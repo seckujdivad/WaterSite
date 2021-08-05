@@ -9,11 +9,12 @@ import {rotateVec3} from "../vectorutils";
 
 interface IProps
 {
+	className?: string;
 	camera: Camera;
 	lookSpeed: number;
 	moveSpeed: number;
-	onCameraChanged?: (camera: Camera) => void;
 	updateInterval: number;
+	onCameraChanged?: (camera: Camera) => void;
 };
 
 interface IState {};
@@ -40,6 +41,7 @@ class ControllableCamera extends React.PureComponent<IProps, IState>
 	render()
 	{
 		return <div
+			className={this.props.className}
 			ref={this._div_ref}
 			tabIndex={0}
 			onClick={this.onClicked.bind(this)}

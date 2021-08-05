@@ -23,6 +23,9 @@ interface IState
 
 let getEngine = memoizeOne(context => new Engine(context));
 
+/**
+ * Displays rendering output from Engine. Must be wrapped in a div or div-based component like ControllableCamera.
+ */
 class Viewport extends React.Component<IProps, IState>
 {
 	constructor(props: IProps)
@@ -47,6 +50,9 @@ class Viewport extends React.Component<IProps, IState>
 
 	renderGL()
 	{
+		this.state.canvas_ref.current.width = this.state.canvas_ref.current.parentElement.clientWidth;
+		this.state.canvas_ref.current.height = this.state.canvas_ref.current.parentElement.clientHeight;
+
 		const context: WebGL2RenderingContext = this.state.canvas_ref.current.getContext("webgl2");
 		const strict_context = context as any as WebGL2RenderingContextStrict;
 		const engine = getEngine(strict_context);

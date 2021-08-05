@@ -154,10 +154,10 @@ class App extends React.Component<IProps, IState>
 		
 		let modelSelection = <select value={selected_model_index} onChange={this.newModelSelected.bind(this)} className={styles.ModelSelection}>{model_options}</select>;
 
-		return <>
-			<div className={styles.App}>{layer_components}</div>
+		return <div className={styles.App}>
+			<div className={styles.LayerContainer}>{layer_components}</div>
 			<ControllableCamera
-				camera={this.state.camera} moveSpeed={0.02} lookSpeed={3} updateInterval={10}
+				className={styles.ControllableCamera} camera={this.state.camera} moveSpeed={0.02} lookSpeed={3} updateInterval={10}
 				onCameraChanged={((camera: Camera) => this.setState({camera: camera})).bind(this)}>
 				<Viewport models={this.state.models} camera={this.state.camera} />
 			</ControllableCamera>
@@ -169,7 +169,7 @@ class App extends React.Component<IProps, IState>
 			</div>
 			{modelSelection}
 			<button className={styles.ResetButton} onClick={this.resetScene.bind(this)}>Reset</button>
-		</>;
+		</div>;
 	}
 
 	updateLayerTransparency(index: number, transparency: number)

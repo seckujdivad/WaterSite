@@ -61,12 +61,9 @@ class Engine
 	render(models: Array<IModel>, camera: Camera)
 	{
 		const gl = this._context;
-
-		//set up viewport width
-		const canvas = narrowCanvas(gl.canvas);
-		gl.canvas.width = canvas.clientWidth;
-		gl.canvas.height = canvas.clientHeight;
-		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+		
+		//set viewport width
+		gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
 		//create GL models
 		// remove excess GLModels

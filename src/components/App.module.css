@@ -1,5 +1,13 @@
 .App
 {
+	display: flex;
+	flex-direction: column;
+	
+	min-height: 100%;
+}
+
+.LayerContainer
+{
 	background-color: white;
 	font-family: sans-serif;
 }
@@ -52,5 +60,12 @@
 
 .ResetButton
 {
+	width: 100%;
+}
+
+.ControllableCamera
+{
+	flex-grow: 1;
+	height: 100%;
 	width: 100%;
 }
