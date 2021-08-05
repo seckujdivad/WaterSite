@@ -1,6 +1,6 @@
 import {vec4, vec2} from "gl-matrix";
 
-import Texture, {isURL, isVec3, isVec4, hashTexture, TextureType} from "./Texture";
+import Texture, {TextureType, hashTexture, isURL, isVec3, isVec4, is2D, isCubemap} from "./Texture";
 
 
 class TextureManager
@@ -28,11 +28,11 @@ class TextureManager
 			const gl_texture = gl.createTexture();
 			
 			let texture_enum: WebGLRenderingContextStrict.TextureTarget = gl.TEXTURE_2D;
-			if (texture.type === TextureType.Texture2D)
+			if (is2D(texture))
 			{
 				texture_enum = gl.TEXTURE_2D;
 			}
-			else if (texture.type === TextureType.TextureCubemap)
+			else if (isCubemap(texture))
 			{
 				texture_enum = gl.TEXTURE_CUBE_MAP;
 			}
@@ -60,11 +60,11 @@ class TextureManager
 				image.onload = function ()
 				{
 					gl.bindTexture(texture_enum, gl_texture);
-					if (texture.type === TextureType.Texture2D)
+					if (is2D(texture))
 					{
 						gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 					}
-					else if (texture.type === TextureType.TextureCubemap)
+					else if (isCubemap(texture))
 					{
 						let targets: Array<[WebGLRenderingContextStrict.TexImage2DTarget, vec2]> = [
 							[gl.TEXTURE_CUBE_MAP_POSITIVE_X, vec2.fromValues(2, 1)],
