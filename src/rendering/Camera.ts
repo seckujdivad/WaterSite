@@ -22,6 +22,13 @@ class Camera
 		return applyRotation(mat4.create(), this.rotation, inverse);
 	}
 
+	getTranslation(): mat4
+	{
+		let translate_vec = vec3.subtract(vec3.create(), vec3.create(), this.position);
+		let translation = mat4.create();
+		return mat4.translate(translation, translation, translate_vec);
+	}
+
 	getTransformation(): mat4
 	{
 		let transformation = this.getRotation();
