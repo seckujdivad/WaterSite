@@ -6,7 +6,7 @@ import Camera from "./rendering/Camera";
 import IMaterial from "./rendering/material/IMaterial";
 import DefaultMaterial from "./rendering/material/default/DefaultMaterial";
 import SkyboxMaterial from "./rendering/material/skybox/SkyboxMaterial";
-import {TextureType} from "./rendering/texture/Texture";
+import {TextureType, createTexture2D, createTextureCubemap} from "./rendering/texture/Texture";
 
 
 function getCamera()
@@ -17,12 +17,13 @@ function getCamera()
 function getModels(modelLoadedCallback: (modelLoaded: Model<IMaterial>) => void = (_) => {})
 {
 	let cube = new Model(new DefaultMaterial());
-	cube.material.colour = {type: TextureType.Texture2D, data: "./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg"};
-	cube.material.normal = {type: TextureType.Texture2D, data: "./SeaWavesB_N.jpg"};
+	cube.material.colour = createTexture2D("./seamless_desert_sand_texture_by_hhh316_d311qn7-fullview.jpg");
+	cube.material.normal = createTexture2D("./SeaWavesB_N.jpg");
+	cube.material.skybox = createTextureCubemap("./Daylight_Box_UV.png");
 	loadPLYModelFromURL(cube, "./cube.ply").then(modelLoadedCallback);
 	cube.identifier = "Cube";
 
-	let skybox = new Model(new SkyboxMaterial({type: TextureType.TextureCubemap, data: "./Daylight_Box_UV.png"}));
+	let skybox = new Model(new SkyboxMaterial(createTextureCubemap("./Daylight_Box_UV.png")));
 	loadPLYModelFromURL(skybox, "./cube.ply").then(modelLoadedCallback);
 	skybox.identifier = "Skybox";
 	skybox.flip_winding = true;
