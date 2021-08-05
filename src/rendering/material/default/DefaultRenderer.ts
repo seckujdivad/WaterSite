@@ -32,7 +32,8 @@ class DefaultRenderer implements IRenderer<DefaultMaterial>
 			mat4.perspective(perspective, job.camera.vfov, gl.canvas.width / gl.canvas.height, 0.1, 100);
 			gl.uniformMatrix4fv(this._shader_program.getUniform("perspective"), false, perspective);
 
-			gl.uniformMatrix4fv(this._shader_program.getUniform("transformationCamera"), false, job.camera.getTransformation());
+			gl.uniformMatrix4fv(this._shader_program.getUniform("rotationCamera"), false, job.camera.getRotation());
+			gl.uniformMatrix4fv(this._shader_program.getUniform("translationCamera"), false, job.camera.getTranslation());
 			
 			//perform render
 			for (let i = 0; i < job.models.length; i++)
@@ -41,6 +42,7 @@ class DefaultRenderer implements IRenderer<DefaultMaterial>
 
 				this._shader_program.addTexture("textureColour", job.texture_manager.getTexture(model.material.colour));
 				this._shader_program.addTexture("textureNormal", job.texture_manager.getTexture(model.material.normal));
+				this._shader_program.addTexture("textureSkybox", job.texture_manager.getTexture(model.material.skybox));
 
 				glmodel.bind();
 
@@ -54,7 +56,8 @@ class DefaultRenderer implements IRenderer<DefaultMaterial>
 	{
 		this._shader_program = await loadShaderProgram(this._context, "./normal.vert", "./normal.frag");
 
-		this._shader_program.addUniform("transformationCamera");
+		this._shader_program.addUniform("rotationCamera");
+		this._shader_program.addUniform("translationCamera");
 		this._shader_program.addUniform("transformationModel");
 		this._shader_program.addUniform("perspective");
 	}
