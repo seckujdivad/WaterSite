@@ -81,4 +81,14 @@ function hashTexture(texture: Texture): string
 	return hashTextureType(texture.type) + hashTextureData(texture.data);
 }
 
-export {Texture as default, Texture2D, TextureCubemap, TextureType, hashTexture, is2D, isCubemap, isURL, isVec3, isVec4};
+function createTexture2D(data: TextureData): Texture2D
+{
+	return {type: TextureType.Texture2D, data: data};
+}
+
+function createTextureCubemap(data: TextureData): TextureCubemap
+{
+	return {type: TextureType.TextureCubemap, data: data};
+}
+
+export {Texture as default, Texture2D, TextureCubemap, TextureType, hashTexture, is2D, isCubemap, isURL, isVec3, isVec4, createTexture2D, createTextureCubemap};
