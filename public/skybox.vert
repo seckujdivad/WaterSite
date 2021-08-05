@@ -15,6 +15,6 @@ void main()
 {
 	vertSampleVec = inPosition;
 	vertPosition = perspective * rotationCamera * vec4(inPosition, 1.0f);
-
-    gl_Position = vec4(vertPosition.xy, vertPosition.w, vertPosition.w);
+	
+	gl_Position = vec4(vertPosition.xy, vertPosition.w, vertPosition.w);
 }
